@@ -1,0 +1,37 @@
+<div class="row">
+	<div class="col l4"></div>
+	<div class="col l4">
+		<div class="card">
+			<div class="card-content">
+				<h4>Create Workspace</h4>
+				<form method="POST" action="/w/doregister">
+					<div class="row input-field">
+						<input class="validate" type="Text" name="name" required minlength="6" maxlength="16" pattern="[A-z0-9-]+">
+						<span class="helper-text" data-success="format benar">format hanya berisi huruf (a-z), angka (0-9) atau karakter '-'</span>
+					</div>
+					<div class="input-field row">
+						<select name="plan">
+							<option value="" disabled selected>Pilih Plan</option>
+							<option value="1">Plan 1</option>
+							<option value="2">Plan 2</option>
+							<option value="3">Plan 3</option>
+						</select>
+					</div>
+					<div class="row detail-plan"></div>
+					<div class="row">
+						<button class="btn" type="submit" name="action">Create</button>
+						<a href="/" class="btn-flat waves-effect waves-blue">Home</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col l4"></div>
+</div>
+<script type="text/javascript">
+	document.addEventListener('DOMContentLoaded', function() {
+	    var elems = document.querySelectorAll('select');
+	    var instances = M.FormSelect.init(elems);
+	  });
+
+</script>

@@ -1,0 +1,74 @@
+<div class="col l12">
+	<div class="row">
+		<div class="col l6">
+			<div class="input-field">
+				<input type="text" id="search-document-input">
+				<label for="search-document-input">Cari Dokumen</label>
+			</div>
+		</div>
+		<div class="col">
+			<div class="input-field">
+				<a class="waves-effect btn-flat"><i class="material-icons">search</i></a>
+				<a class="waves-effect btn-flat"><i class="material-icons">tune</i></a>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="col l12">
+	{{#if documents}}
+	<ul class="collection">
+		{{#each documents}}
+		<li class="collection-item document-content">{{this.name}}</li>
+		{{/each}}
+	</ul>
+	{{else}}
+	nothing
+	{{/if}}
+</div>
+
+
+{{!--
+<!-- file list -->
+<div class="row" style="max-height: 400px;overflow-y: scroll;">
+	{{#if documents}}
+	{{#each documents}}
+	<div id="{{this._id}}" class="col l4 s12 document-content">
+		<div class="card">
+			<div class="card-content">
+				<span class="card-title"><a class="truncate">{{this.name}}</a></span>
+				<p>Author : <a href="/p/{{this.author.username}}" target="_blank">{{this.author.username}}</a></p>
+			</div>
+			<div class="card-action document-detail">
+				<a target="_blank" href="/file/download/{{this.name}}"><i
+						class="material-icons black-text">subject</i></a>
+				<a href="#"><i class="material-icons black-text">link</i></a>
+				<a href="#"><i class="material-icons black-text">share</i></a>
+			</div>
+		</div>
+	</div>
+	{{/each}}
+	{{else}}
+	<div class="col l3 s6">
+		You dont have any documents
+	</div>
+	{{/if}}
+</div>
+<a class="right btn-floating btn-large waves-effect waves-light {{webconf.color.primary}}"><i
+		class="material-icons">add</i></a> --}}
+
+<script type="text/javascript">
+	$(".document-content").click(function () {
+		let name = $(this).find(".card-title").children().text();
+		let workspacename = $(".brand-logo").text();
+		let docId = $(this).attr("id");
+		$.post("http://localhost/ajax/document-details", {
+			id: docId,
+			workspacename: workspacename,
+		}, function (data, status) {
+			window.history.pushState({ "html": "something", "pageTitle": "file saya" }, "", "http://localhost/" + workspacename + "/" + docId);
+			$("#content").html(data);
+		});
+	})
+</script>

@@ -1,0 +1,130 @@
+<nav class="{{webconf.color.primary}}">
+	<div class="nav-wrapper">
+		<a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+		<ul id="nav-mobile" class="right hide-on-med-and-down">
+			{{#if login}}
+			<li><a href="/">Hallo, {{username}}</a></li>
+			<li><a href="#"><i class="material-icons">notifications</i></a></li>
+			<li><a href="#" id="dudung" class="dropdown-trigger" data-target="dropdown1"><i
+						class="material-icons">person</i></a></li>
+			{{else}}
+			<li><a href="#modal1" class="modal-trigger">Login</a></li>
+			{{!-- <li><a href="/u/register">Daftar</a></li> --}}
+			<li><a href="#modal2" class="modal-trigger">Daftar</a></li>
+			{{/if}}
+		</ul>
+	</div>
+</nav>
+<ul class="sidenav" id="mobile-demo">
+	{{#if login}}
+	<li><a href="#">Hallo {{username}}</a></li>
+	<li><a href="#">Notification</a></li>
+	<li><a href="#" id="dudung" class="dropdown-trigger" data-target="dropdown1">Profile</a></li>
+	{{else}}
+	<li><a href="#modal1" class="modal-trigger">Login</a></li>
+	<li><a href="/u/register">Daftar</a></li>
+	{{/if}}
+</ul>
+<ul id="dropdown1" class="dropdown-content">
+	<li><a href="#user-setting"><i class="material-icons">settings</i>setting</a></li>
+	<li class="divider"></i></li>
+	<li><a href="/u/auth/logout"><i class="material-icons">exit_to_app</i>Logout</a></li>
+</ul>
+<div id="modal1" class="modal card" style="width:35%">
+	<div class="modal-content">
+		<div class="modal-error-message"></div>
+		{{> login_form}}
+	</div>
+</div>
+<div id="modal2" class="modal card">
+	<div class="modal-content">
+		<form id="myForm" name="myform" action="/u/register" method="POST">
+			<div class="row">
+				<div class="col l12">
+
+					<h4>Register di sini</h4>
+					<div class="row">
+						<div class="input-field col s6">
+							<input class="validate" id="email-register" type="email" name="email" required
+								minlength="6">
+							<label for="email-register">Masukan Email</label>
+
+						</div>
+						<div class="input-field col s6">
+							<input class="validate {{error.valid}}" id="username-register" type="text" name="username"
+								required minlength="6">
+							<label for="username-register">Masukan Username</label>
+							<span id="helper-username-register" class="helper-text" data-error="{{error.message}}"
+								data-success=""></span>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="input-field col s6">
+							<input class="validate" id="password-register" type="password" name="password" required
+								minlength="6">
+							<label for="password-register">Masukan password</label>
+						</div>
+						<div class="input-field col s6">
+							<input class="validate" id="password-register-confirm" type="password"
+								name="confirm-password" required minlength="6">
+							<label for="password-register-confirm">Konfirmasi password</label>
+							<span id="helper-confirm-password" class="helper-text" data-error="" data-success=""></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col l12">
+							<button class="btn {{webconf.color.primary}}" type="submit" name="action">Register
+							</button>
+						</div>
+					</div>
+					<a href="/">kembali ke halaman utama</a>
+				</div>
+
+				<!-- <div class="col l6">
+				<h4>Pilih Plan</h4>
+				<div class="input-field col s12">
+					<select name="plan">
+						<option value="" disabled selected>Choose your option</option>
+						<option value="1">Option 1</option>
+						<option value="2">Option 2</option>
+						<option value="3">Option 3</option>
+					</select>
+					<label>Materialize Select</label>
+				</div>
+
+			</div> -->
+			</div>
+		</form>
+	</div>
+</div>
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		var elemsDropdown = document.getElementById('dudung');
+		var instancesDropdown = M.Dropdown.init(elemsDropdown, { constrainWidth: false });
+		var elemsModal = document.querySelectorAll('.modal');
+		var instancesModal = M.Modal.init(elemsModal);
+		var elemsSidenav = document.querySelectorAll('.sidenav');
+		var instancesSidenav = M.Sidenav.init(elemsSidenav);
+		let elems = document.querySelectorAll('select');
+		let instances = M.FormSelect.init(elems);
+		$('#username-register').val('{{userDocument.username}}');
+		$('#email-register').val('{{userDocument.email}}');
+
+		$('#myForm').submit(async function (evt) {
+			let user = $('#username-register').val();
+			let pass = $('#password-register').val();
+			let passCon = $('#password-register-confirm').val();
+			let email = $('#email-register').val();
+			if (pass === passCon) {
+				return true;
+			} else {
+				evt.preventDefault();
+				let input = document.getElementById("password-register-confirm")
+					.setAttribute("class", "validate invalid");
+				let helper = document.getElementById("helper-confirm-password")
+					.setAttribute("data-error", "Password tidak sama");
+			}
+		});
+	});
+</script>

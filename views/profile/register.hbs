@@ -1,0 +1,111 @@
+<div class="container">
+	<div class="row">
+		<h1>Mulai daftar disini</h1>
+	</div>
+	<form id="myForm" name="myform" action="/u/register" method="POST">
+		<div class="row">
+			<div class="col l6">
+
+				<h4>Register di sini</h4>
+				<div class="row">
+					<div class="input-field col s12">
+						<input class="validate" id="email-register" type="email" name="email" required minlength="6">
+						<label for="email-register">Masukan Email</label>
+						
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<input class="validate {{error.valid}}" id="username-register" type="text" name="username" required
+							minlength="6">
+						<label for="username-register">Masukan Username</label>
+						<span id="helper-username-register" class="helper-text" data-error="{{error.message}}" data-success=""></span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<input class="validate" id="password-register" type="password" name="password" required
+							minlength="6">
+						<label for="password-register">Masukan password</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<input class="validate" id="password-register-confirm" type="password" name="confirm-password"
+							required minlength="6">
+						<label for="password-register-confirm">Konfirmasi password</label>
+						<span id="helper-confirm-password" class="helper-text" data-error="" data-success=""></span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col l12">
+						<button class="btn {{webconf.color.primary}}" type="submit" name="action">Register
+						</button>
+					</div>
+				</div>
+				<a href="/">kembali ke halaman utama</a>
+			</div>
+
+			<!-- <div class="col l6">
+				<h4>Pilih Plan</h4>
+				<div class="input-field col s12">
+					<select name="plan">
+						<option value="" disabled selected>Choose your option</option>
+						<option value="1">Option 1</option>
+						<option value="2">Option 2</option>
+						<option value="3">Option 3</option>
+					</select>
+					<label>Materialize Select</label>
+				</div>
+
+			</div> -->
+		</div>
+	</form>
+</div>
+
+<script>
+	$(document).ready(function () {
+		let elems = document.querySelectorAll('select');
+		let instances = M.FormSelect.init(elems);
+		$('#username-register').val('{{userDocument.username}}');
+		$('#email-register').val('{{userDocument.email}}');
+	});
+
+	$('#myForm').submit(async function (evt) {
+		let user = $('#username-register').val();
+		let pass = $('#password-register').val();
+		let passCon = $('#password-register-confirm').val();
+		let email = $('#email-register').val();
+		if (pass === passCon) {
+			return true;
+		} else {
+			evt.preventDefault();
+			let input = document.getElementById("password-register-confirm")
+				.setAttribute("class", "validate invalid");
+			let helper = document.getElementById("helper-confirm-password")
+				.setAttribute("data-error", "Password tidak sama");
+		}
+	});
+</script>
+
+<!--
+
+<h1>silakan register disini</h1>
+
+<ul class="browser-default">
+
+	<li>masukan nama</li>
+
+	<li>masukan email</li>
+
+	<li><i>atau daftar dengan menggunakan akun google???</i></li>
+
+</ul>
+
+<ul class="browser-default">
+	<li>pilih plan yang akan digunakan (plan yang mana yahooooo?????)</li>
+	<li></li>
+	<li></li>
+</ul>
+
+-->

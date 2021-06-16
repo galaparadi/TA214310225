@@ -1,0 +1,10 @@
+<div class="card hoverable lime lighten-4 z-depth-3">
+	<div class="card-content">
+		<span class="cart-title">Your workspaces : </span>
+		<ul>
+			{{#each workspaces}}
+				<li><a onmouseover="linkHover(this)" onmouseout="linkHoverOut(this)" class="grey-text" href="/{{this.name}}">{{this.name}}</a></li>
+			{{/each}}
+		</ul>
+	</div>
+</div>

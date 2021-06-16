@@ -1,0 +1,64 @@
+<nav class="indigo">
+	<div class="nav-wrapper">
+		<a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+		<ul class="right hide-on-med-and-down">
+			<li><a href="collapsible.html">Notification</a></li>
+			<li><a href="mobile.html">Logout</a></li>
+		</ul>
+	</div>
+</nav>
+
+<ul class="sidenav indigo lighten-4" id="mobile-demo">
+	<li><a href="collapsible.html">Notification</a></li>
+	<li><a href="mobile.html">Logout</a></li>
+</ul>
+
+<div class="container">
+	<div class="row">
+		<div class="col l4 s12">
+			<div class="card-panel indigo lighten-4">
+				<img class="responsive-img" src="https://randomuser.me/api/portraits/men/65.jpg">
+				<div class="flow-text">{{data.user.username}}</div>
+				<div><i>some description here</i></div>
+				<div><i>another description here</i></div>
+			</div>
+		</div>
+		<div class="col l8 s12">
+			<div class="card indigo lighten-4">
+				<ul class="tabs tabs-fixed-width indigo lighten-4">
+					<li class="tab"><a class="active" href="#test1">Workspace</a></li>
+					<li class="tab"><a href="#test2">Activity</a></li>
+				</ul>
+				<div id="test1" class="col s12 indigo lighten-5">
+					<ul>
+						{{#each data.user.workspaces}}
+						<li><a target="_blank" href="/{{this.name}}">{{this.name}}</a></li>
+						{{/each}}
+					</ul>
+				</div>
+				<div id="test2" class="col s12 indigo lighten-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+				<div style="clear: both"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(".indicator").addClass("indigo");
+		$(".tab a").addClass("black-text");
+	});
+	var instance = M.Tabs.init(document.querySelectorAll('.tabs'));
+	document.addEventListener('DOMContentLoaded', function() {
+		var elems = document.querySelectorAll('.sidenav');
+		var instances = M.Sidenav.init(elems);
+	});
+
+	//change the style brooooo
+
+</script>

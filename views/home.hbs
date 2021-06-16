@@ -1,0 +1,95 @@
+{{> components/navbar}}
+<div class="container">
+	<div class="row">
+		<div class="col l3" id="workspace-list">
+			<h5>Workspace list</h5>
+			{{#workspace workspaces}}
+			{{> components/collections this.names}}
+			{{/workspace}}
+		</div>
+
+		<div class="col l9">
+			<h4>Notification feed</h4>
+			<div class="divider"></div>
+
+			{{!-- dashboard feed item --}}
+			{{#if feeds}}
+			{{#each feeds}}
+			<div class="card-panel">
+				<div class="row" style="margin-bottom: 5px">
+					<div class="col l12 s12 valign-wrapper">
+						<p style="margin-top: 0px"><b><a href="/{{this.workspace}}">{{this.workspace}}</a></b>
+							{{this.date}}
+						</p>
+					</div>
+				</div>
+
+				{{!-- dashboard feed text --}}
+				{{this.message}}
+			</div>
+			{{/each}}
+			{{else}}
+			<div class="row">
+				<div class="col s12">
+					no feeds
+				</div>
+			</div>
+			{{/if}}
+
+		</div>
+
+		{{!-- <div class="col l4">
+			<h4>Activity</h4>
+			<div class="section">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+			<div class="divider black"></div>
+			<div class="section">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+		</div> --}}
+	</div>
+
+	<div id="modal-workspace" class="modal">
+		<div class="modal-content">
+			<h4>Create Workspace</h4>
+			<form method="POST" action="/w/doregister">
+				<div class="row input-field">
+					<input class="validate" type="Text" name="name" required minlength="6" maxlength="16"
+						pattern="[A-z0-9-]+">
+					<span class="helper-text" data-success="format benar">format hanya berisi huruf (a-z), angka (0-9)
+						atau karakter '-'</span>
+				</div>
+				<div class="row">
+					<button class="btn" type="submit" name="action">Create</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$('a[href="#user-setting').click(() => {
+		$.post('/x/user-settings', {}, (data, status) => {
+			$('.container').html(data)
+		})
+	})
+
+	if (location.hash === '#user-setting') {
+		fetchUserSettingSection();
+	}else{
+		
+	}
+
+	function fetchUserSettingSection() {
+		$.post('/x/user-settings', {}, (data, status) => {
+			$('.container').html(data)
+		})
+	}
+</script>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{data.workspace.name}}</title>
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="crossorigin="anonymous"></script>
+  <style type="text/css">
+    
+    /* Style untuk fixed nav dikiri*/
+    /*body {
+      padding-left: 275px;
+    }
+
+    .sidenav {
+      width: 275px;
+    }
+
+    @media only screen and (max-width : 992px) {
+      body {
+        padding-left: 0;
+      }
+    }
+    */
+
+
+    /* style untuk avatar*/
+    #avatar {
+      max-height : 56px;
+      padding : 4px
+    }
+
+    #avatar > img {
+      max-height : 48px;
+    }
+
+    @media only screen and (min-width: 601px) {
+      #avatar {
+        max-height : 64px;
+        padding : 7px
+      }
+
+      #avatar > img {
+        max-height : 50px;
+      }
+    }
+
+
+
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body class="{{webconf.color.background}}">
+  {{{body}}}
+</body>
+</html>

@@ -1,0 +1,123 @@
+<div class="section">
+	<h3>{{document.name}}</h3>
+	<h4>Version 1.0</h4>
+	<div class="document-viewer" style="margin-top: 20px">
+		<embed src="/file/download/{{name}}/{{document._id}}" width="100%" height="400px"/>
+		{{!-- <iframe src="http://docs.google.com/viewer?url=https://b4f72c963515.ngrok.io/persemakmuran/documents/{{document.fsId}}/file&embedded=true" width="100%" height="600"></iframe> --}}
+		<a class="waves-effect waves-teal btn-flat">View</a>
+		<a class="waves-effect waves-teal btn-flat">Change</a>
+		<a class="waves-effect waves-teal btn-flat right"><i class="material-icons black-text">share</i></a>
+		<a class="waves-effect waves-teal btn-flat right" target="_blank" href="/file/download/{{document.name}}"><i class="material-icons black-text">file_download</i></a>
+		<a class="waves-effect waves-teal btn-flat right"><i class="material-icons black-text">link</i></a>
+
+		<!-- menggunakan google doc viewer. tidak bisa digunakan di localhost -->
+
+<!-- 		<iframe src="http://docs.google.com/viewer?url=http://localhost/pdfworkspace/file/download/{{document.fsId}}&embedded=true" width="100%" height="600"></iframe>
+ -->
+	
+	</div>
+
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+	<div class="card">
+		<div class="card-tabs">
+			<ul class="tabs tabs-fixed-width">
+				<li class="tab"><a class="active" href="#document-detail">Detail</a></li>
+				<li class="tab"><a href="#document-version">Version</a></li>
+				<li class="tab"><a href="#document-comment">comment</a></li>
+			</ul>
+		</div>
+		<div class="card-content">
+			<div id="document-detail">
+				<p>Author : <a target="_blank" href="/p/{{document.author.username}}">{{document.author.username}}</a></p>
+				<p>Last Update : DDMMYYYY</p>
+			</div>
+			<div id="document-version">
+				<a class="waves-effect waves-teal btn">Add</a>
+			</div>
+			<div id="document-comment">
+				<div class="input-field">
+					<textarea id="comment-input" class="materialize-textarea" name="comment-input"></textarea>
+          			<label for="comment-input">Comment</label>
+				</div>
+				<a class="btn right" onclick="sendComment()">send</a>
+				<div style="clear: both;" id="comment-list">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	document.title = "{{document.name}}"
+	var instance = M.Tabs.init(document.querySelectorAll('.tabs'));
+	$(".indicator").addClass("black");
+	$(".tab a").addClass("black-text");
+
+	function sendComment(){
+		var link = "http://localhost/api/w/" + $(".brand-logo").text() + "/doc/" + "{{document.name}}" + "/comment";
+		
+		$.post(link,{
+			documentId: "{{document.id}}",
+			comment: $("#comment-input").val()
+		},function(data,status){
+			initComment();
+		});
+	}
+
+	function toggle(){
+		$(".document-viewer").toggle();
+	}
+
+	function back(){
+		$.post("http://localhost/ajax/file-dashboard",{
+			ObjectId: $(".brand-logo").attr("id")
+		},function(data,status){
+			$("#content").html(data);
+		});
+	}
+	
+	function initComment(){
+		var link = "http://localhost/api/w/" + $(".brand-logo").text() + "/doc/" + "{{document.name}}" + "/comments";
+		$.get(link,function(data,status){
+			$("#comment-list").html("");
+			var textClass = "grey-text";
+			var ul = document.createElement("ul");
+			data.forEach(function(item,index){
+				var li = document.createElement("li");
+				li.id = "comment-" + index;
+				var div = document.createElement("div");
+				div.className = "section";
+
+				var b = document.createElement("b");
+				b.innerHTML = item.author.username;
+
+				var span = document.createElement("span");
+				span.className = textClass;
+				span.innerHTML = " " + item.datePost;
+
+				var p = document.createElement("p");
+				p.innerHTML = item.comment;
+
+				var pBottom = document.createElement("p");
+				pBottom.innerHTML = "<b class='" + textClass + "'>balas</b>"
+
+				var text = document.createTextNode("wow " + index);
+				
+				div.appendChild(b)
+				div.appendChild(span)
+				div.appendChild(p)
+				div.appendChild(pBottom);
+
+				ul
+				.appendChild(li)
+				.appendChild(div);
+			});
+			$("#comment-list").append(ul);
+		})
+	}
+</script>

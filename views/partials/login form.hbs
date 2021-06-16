@@ -1,0 +1,24 @@
+<h4>Login di sini</h4>
+<form method="POST" action="/u/auth/login">
+	<div class="row">
+		<div class="input-field col s12">
+			<input id="username-login" type="text" name="username" autocomplete="false" required class="validate">
+			<label for="username-login">Username</label>
+		</div>
+	</div>
+	<div class="row">
+		<div class="input-field col s12">
+			<input id="password-login" type="password" name="password" required class="validate">
+			<label for="password-login">Password</label>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col s12 l6">
+			<button class="btn col s12 blue" type="submit" name="action">login
+			</button>
+		</div>
+		<div class="col s12 l6">
+			<a href="/u/auth/google" class="col s12 waves-effect waves-light btn red lighten-1">Login using google</a>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,14 @@
+{{#if this}}
+<div class="collection">
+	{{#each this}}
+	<a href="/{{this}}" class="valign-wrapper collection-item black-text">
+			{{this}}	
+		</a>
+	{{/each}}
+</div>
+<a class="modal-trigger" href="#modal-workspace">buat workspace</a>
+{{else}}
+<p>Workspace tidak ada</p>
+<a class="modal-trigger" href="#modal-workspace">buat workspace</a>
+{{/if}}
+

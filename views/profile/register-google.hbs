@@ -1,0 +1,58 @@
+<div class="container">
+	<div class="row">
+		<h1 class="center-align">tinggal sedikit lagi</h1>
+	</div>
+	<form name="myform" action="/u/doregister" method="POST" onsubmit="return formValidator()">
+		<div class="row">
+			<div class="col l6 offset-l3">
+				<div class="row">
+					<div class="input-field col s12">
+						<input class="validate" id="username-register" type="text" name="username" required minlength="6" value="{{data.username}}">
+						<label for="username-register">Masukan Username</label>
+					</div>
+				</div>
+				<h4>Pilih Plan</h4>
+				<div class="row">
+					<div class="input-field col s12">
+						<select name="plan">
+							<option value="" disabled selected>Choose your option</option>
+							<option value="1">Option 1</option>
+							<option value="2">Option 2</option>
+							<option value="3">Option 3</option>
+						</select>
+						<label>Materialize Select</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col l12">
+						<button class="btn blue darken-4" type="submit" name="action">Register
+						</button>
+					</div>
+				</div>
+				<a href="/">kembali ke halaman utama</a>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		var elems = document.querySelectorAll('select');
+		var instances = M.FormSelect.init(elems);
+	});
+	
+	function formValidator(){
+		let pass = document.getElementById("password-register").value;
+		let passCon = document.getElementById("password-register-confirm").value;
+		if(pass===passCon){
+			return true;
+		} else {
+			let input = document.getElementById("password-register-confirm")
+			.setAttribute("class", "validate invalid");
+
+			let helper = document.getElementById("helper-confirm-password")
+			.setAttribute("data-error","Password tidak sama");
+			return false;
+		}
+	}
+</script>
