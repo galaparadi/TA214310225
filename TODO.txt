@@ -1,0 +1,37 @@
+TO DO
+- tambahkan unik field di mongodb
+- hilangkan method isExist di model
+- buat supaya create workspace otomatis menambahkan user kedalam workspace
+
+
+TO DO 26/02/2019
+
+- menu pada dashboard
+		* user
+		* document setting
+		* contributor
+		* share
+		* report
+		* setting workspace
+
+TO DO 27/02/2019
+	- cari cara impelmentasi document tree ke schema database
+	- coba gunakan jstree untuk UI document tree
+	- issue : workspace dengan nama kembar
+
+
+TO DO 13/02/2019
+	- perbaiki metode view - JANGAN PAKE AJAX!!!!
+	- manfaatkan hbs partials
+	- buat setiap komponen menjadi 1 partial
+	- untuk kebutuhan khusus, gunakan custom helpe
+
+
+
+
+NEWEST TODO
+- buat setting user
+- pertimbangkan upload foto user
+- perbaiki tampilan listfile di dashboard workspace
+- perbaiki tampilan feed event
+- 
