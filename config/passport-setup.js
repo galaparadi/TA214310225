@@ -7,16 +7,16 @@ const User = require('../models/user-model');
 const UserDatasource = require('../datasource/datasource').Users();
 
 passport.serializeUser((user, done) => {
-  done(null, user.username);
+  done(null, { username: user.user.username, accesstoken: user.accessToken });
 });
 
 passport.deserializeUser(async (username, done) => {
   try {
-    let { user } = await UserDatasource.getUser({ username });
+    let { user } = await UserDatasource.getUser({ username: username.username });
     done(null, user);
   } catch (error) {
     console.log(error.message);
-    done(err, false);
+    done(error, false);
   }
 });
 
@@ -27,7 +27,7 @@ passport.use(
     callbackURL: '/u/auth/gdrive/redirect',
   }, (accessToken, refreshToken, profile, done) => {
     console.log({ accessToken, refreshToken })
-    return done(null, {email : profile.email, accessToken});
+    return done(null, { email: profile.email, accessToken });
   })
 );
 
@@ -42,7 +42,7 @@ passport.use(
     // ---------- check if user already exists in our own db
     let { user } = await UserDatasource.authGoogleUser({ googleId: profile.id });
     if (user) {
-      return done(null, user, { registered: true });
+      return done(null, { user, accessToken }, { registered: true });
     } else {
       let uname = profile.emails[0].value.split('@');
       let newUser = new User({
@@ -52,7 +52,7 @@ passport.use(
         googleAccount: true
       })
 
-      return done(null, newUser, { registered: false });
+      return done(null, { user: newUser, accessToken }, { registered: false });
     }
   })
 );
@@ -64,7 +64,7 @@ passport.use(new LocalStrategy(
       if (!user) {
         return done(null, false, { status });
       }
-      return done(null, user);
+      return done(null, {user});
     } catch (err) {
       console.log(err);
       if (err) { return done(null, false, { status }); }

@@ -6,10 +6,16 @@
 				<label for="search-document-input">Cari Dokumen</label>
 			</div>
 		</div>
-		<div class="col">
+		<div class="col l3">
 			<div class="input-field">
 				<a class="waves-effect btn-flat"><i class="material-icons">search</i></a>
 				<a class="waves-effect btn-flat"><i class="material-icons">tune</i></a>
+			</div>
+		</div>
+		<div class="col l3">
+			<div class="input-field">
+				<a id="add-document" class="waves-effect btn"><i
+						class="material-icons right">insert_drive_file</i>Tambah Dokumen</a>
 			</div>
 		</div>
 	</div>
@@ -20,7 +26,7 @@
 	{{#if documents}}
 	<ul class="collection">
 		{{#each documents}}
-		<li class="collection-item document-content">{{this.name}}</li>
+		<li id="{{this._id}}" class="collection-item document-content">{{this.name}}</li>
 		{{/each}}
 	</ul>
 	{{else}}
@@ -59,11 +65,19 @@
 		class="material-icons">add</i></a> --}}
 
 <script type="text/javascript">
+	$("#add-document").click(() => {
+		let workspacename = $(".brand-logo").text();
+		$.post("http://localhost/x/new-document",{
+			workspacename
+		}, function (data, status) {
+			$("#content").html(data);
+		});
+	});
 	$(".document-content").click(function () {
 		let name = $(this).find(".card-title").children().text();
 		let workspacename = $(".brand-logo").text();
 		let docId = $(this).attr("id");
-		$.post("http://localhost/ajax/document-details", {
+		$.post("http://localhost/x/document-details", {
 			id: docId,
 			workspacename: workspacename,
 		}, function (data, status) {
