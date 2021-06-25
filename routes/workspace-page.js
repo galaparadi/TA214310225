@@ -18,7 +18,7 @@ router.get('/chat',
   (req,res) => {
     console.log(req.path);
     console.log(req.params);
-    res.render('chat', {ww: req.params.workspace, layout: false})
+    res.render('chat', {layout: "layouts/chat"})
 });
 
 router.get('/:?*', 

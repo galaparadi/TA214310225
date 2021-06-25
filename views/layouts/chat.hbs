@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{title}}</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdn.shopify.com/s/files/1/1775/8583/t/1/assets/admin-materialize.min.css?v=8850535670742419153">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+        @media only screen and (min-width: 601px) {
+      #avatar {
+        max-height : 64px;
+        padding : 7px
+      }
+
+      #avatar > img {
+        max-height : 50px;
+      }
+    }
+    </style>
+</head>
+
+<body>
+    <nav class="{{webconf.color.primary}}">
+        <div class="nav-wrapper">
+            <div class="brand-logo left" id="{{data.workspace._id}}" onclick="fileDashboard()" href="">
+                <a>{{data.workspace.name}}</a></div>
+            <ul class="right">
+                <li><a href="{{data.workspace.name}}/chat"><i class="material-icons">chat</i></a></li>
+                <li><a><i class="material-icons">people</i></a></li>
+                <li><a href="#settings"><i class="material-icons">settings</i></a></li>
+                <li><a data-target="dropdown1" class="dropdown-trigger" id="avatar" href=""><img
+                            class="circle responsive-img" src="/images/yuna.jpg"></a></li>
+            </ul>
+        </div>
+    </nav>
+    <ul id='dropdown1' class='dropdown-content'>
+        <li style="padding : 14px 16px; width: 200px"><b>{{data.curuser.username}}</b></li>
+        <li class="divider" tabindex="-1"></li>
+        <li><a href="/"><i class="material-icons {{webconf.color.primaryText}}">home</i>home</a></li>
+        <li><a href="/u/auth/logout"><i class="material-icons {{webconf.color.primaryText}}">exit_to_app</i>logout</a>
+        </li>
+    </ul>
+    {{{body}}}
+</body>
+
+</html>
