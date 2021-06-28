@@ -2,6 +2,7 @@ const User = require('../models/user-model');
 const Workspace = require('../models/workspace-model');
 const dataSource = require('../datasource/datasource');
 const HomeController = require('../controller/home');
+const WorkspaceController = require('../controller/workspace');
 var express = require('express');
 var router = express.Router();
 const reqAPI = require('../lib/requestAPI');
@@ -9,6 +10,12 @@ const reqAPI = require('../lib/requestAPI');
 // ====================================this block not valid==================================
 
 // =======================================END of BLock=======================================
+router.post("/live-chat",
+	(req, res, next) => {
+		console.log(res.locals);
+		const {users} = dataSource.Workspaces().getUsers({name: req.body.workspacename});
+		res.render('ajax/livechat.hbs', { username: req.body.username, workspacename: String(req.body.workspacename), users, layout: false });
+	})
 
 router.post("/user-settings",
 	HomeController.isLogin,

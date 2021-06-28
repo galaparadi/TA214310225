@@ -1,11 +1,15 @@
 <nav class="{{webconf.color.primary}}">
 	<div class="nav-wrapper">
-		<div class="brand-logo left" id="{{data.workspace._id}}" onclick="fileDashboard()" href=""><a>{{data.workspace.name}}</a></div>
+		<div class="brand-logo left" id="{{data.workspace._id}}" onclick="fileDashboard()" href="">
+			<a href="#">{{data.workspace.name}}</a>
+		</div>
 		<ul class="right">
-			<li><a href="#"><i>chat</i></a></li>
+			<li><a href="#live-chat"><i class="material-icons">chat</i></a></li>
 			<li><a><i class="material-icons">people</i></a></li>
 			<li><a href="#settings"><i class="material-icons">settings</i></a></li>
-			<li><a data-target="dropdown1" class="dropdown-trigger" id="avatar" href=""><img class="circle responsive-img" src="/images/yuna.jpg"></a></li>
+			<li><a data-target="dropdown1" class="dropdown-trigger" id="avatar" href=""><img
+						class="circle responsive-img"
+						src="https://ui-avatars.com/api/?name={{data.curuser.username}}"></a></li>
 		</ul>
 	</div>
 </nav>
@@ -19,59 +23,52 @@
 <div class="row">
 	<div id="content" class="col l9">
 	</div>
-
-	{{!-- kinda odd for me	 --}}
-	{{!-- <div id="right-side" class="col l3">
-		<div class="card-panel">
-			<h5><b>User list : </b></h5>
-			<ul>
-				{{#each data.users}}
-				<li><a target="_blank" href="/p/{{this.username}}">{{this.username}}</a></li>
-				{{/each}}
-			</ul>
-		</div>
-	</div> --}}
 </div>
 
 <!-- sidenav component -->
 <ul id="slide-out" class="sidenav">
-	<li><div class="user-view">
-		<div class="background">
-			<img src="https://materializecss.com/images/office.jpg">
-		</div>
-		<a href="#user"><img class="circle" src="https://materializecss.com/images/yuna.jpg"></a>
-		<a href="#name"><span class="white-text name">John Doe</span></a>
-		<a href="#email"><span class="white-text email">jdandturk@gmail.com</span></a>
-	</div>
-</li>
-<li><a href="">New Document</a></li>
-<li><a href="">Invite User</a></li>
-<li><a href="">Invite User</a></li>
-<li class="no-padding">
-	<ul class="collapsible collapsible-accordion">
-		<li>
-			<a class="collapsible-header">Dropdown<i class="material-icons">arrow_drop_down</i></a>
-			<div class="collapsible-body">
-				<ul>
-					<li><a href="#!">dd</a></li>
-					<li><a href="#!">Second</a></li>
-					<li><a href="#!">Third</a></li>
-					<li><a href="#!">Fourth</a></li>
-				</ul>
+	<li>
+		<div class="user-view">
+			<div class="background">
+				<img src="https://materializecss.com/images/office.jpg">
 			</div>
-		</li>
-	</ul>
-</li>
-<li>dudung lahs</li>
+			<a href="#user"><img class="circle" src="https://materializecss.com/images/yuna.jpg"></a>
+			<a href="#name"><span class="white-text name">John Doe</span></a>
+			<a href="#email"><span class="white-text email">jdandturk@gmail.com</span></a>
+		</div>
+	</li>
+	<li><a href="">New Document</a></li>
+	<li><a href="">Invite User</a></li>
+	<li><a href="">Invite User</a></li>
+	<li class="no-padding">
+		<ul class="collapsible collapsible-accordion">
+			<li>
+				<a class="collapsible-header">Dropdown<i class="material-icons">arrow_drop_down</i></a>
+				<div class="collapsible-body">
+					<ul>
+						<li><a href="#!">dd</a></li>
+						<li><a href="#!">Second</a></li>
+						<li><a href="#!">Third</a></li>
+						<li><a href="#!">Fourth</a></li>
+					</ul>
+				</div>
+			</li>
+		</ul>
+	</li>
+	<li>dudung lahs</li>
 </ul>
 <ul id="slide-file" class="sidenav">
 	<li id="new-document"><a>New Document</a></li>
-	<li><div class="divider"></div></li>
+	<li>
+		<div class="divider"></div>
+	</li>
 	<li id="file-dashboard"><a>file</a></li>
 </ul>
 <ul id="slide-contributor" class="sidenav">
 	<li><a href="/">{{data.curuser.username}}</a></li>
-	<li><div class="divider"></div></li>
+	<li>
+		<div class="divider"></div>
+	</li>
 	<li><a>Invite</a></li>
 	<li id="contributor"><a>contributor list</a></li>
 	<li id="arrayer"><a>arrayer</a></li>
@@ -94,84 +91,86 @@
 </div>
 -->
 <script type="text/javascript">
-	
-	document.addEventListener('DOMContentLoaded', function() {
-		if(location.hash=="#settings"){
-			//$.post();
-		}
-		var elems = document.querySelectorAll('.sidenav');
-		var instances = M.Sidenav.init(elems);
-		var elemsSide = document.querySelectorAll('.collapsible');
-		var instancesSide = M.Collapsible.init(elemsSide);
-		var dropdown = M.Dropdown.init(document.querySelectorAll('.dropdown-trigger'),{
-			constrainWidth : false,
-			alignment : "right",
-		});
-	    
-		/*var fab_elems = document.querySelectorAll('.fixed-action-btn');
-    	var fab_instances = M.FloatingActionButton.init(fab_elems,{
-	     	direction: 'left'
-	     });*/
-	 });
-	
-	//add page to history
-	window.history.pushState({"html":"something","workspace":"{{data.workspace._id}}"},"");
+	function setting() {
+		$("#content").html('<h1>Coming Soon</h1>');
+	}
 
-	$(window).on('popstate', function(event){
-		$.post("http://localhost/x/file-dashboard",{
-			ObjectId: $(".brand-logo").attr("id"),
-			workspacename: $(".brand-logo").text(),
-		},function(data,status){
+	function liveChat() {
+		$.post("/x/live-chat", {
+			username: '{{data.curuser.username}}',
+			workspacename: '{{data.workspace.name}}',
+		}, (data, status) => {
 			$("#content").html(data);
-		});
-	});
+		})
+	}
 
-	function newDocument(){
-		$.post("/x/new-document",{
+	function newDocument() {
+		$.post("/x/new-document", {
 			ObjectId: $(".brand-logo").attr("id"),
 			workspacename: $(".brand-logo").text()
-		},function(data,status){
+		}, function (data, status) {
 			$("#content").html(data);
 			M.Sidenav.getInstance(document.getElementById('slide-file')).close();
 		});
 	}
 
-	function fileDashboard(){
-		$.post("/x/file-dashboard",{
+	function fileDashboard() {
+		$.post("/x/file-dashboard", {
 			ObjectId: $(".brand-logo").attr("id"),
-			workspacename: $(".brand-logo").text(),
-		},function(data,status){
+			workspacename: document.querySelector(".brand-logo").innerText,
+		}, function (data, status) {
 			$("#content").html(data);
 			M.Sidenav.getInstance(document.getElementById('slide-file')).close();
 		});
 	}
 
-	
-	$(document).ready(function(){
-		if(!window.location.pathname.split('/')[2]){ //if url only base/{workspace}
-			$.post("/x/file-dashboard",{
-				ObjectId: $(".brand-logo").attr("id"),
-				workspacename: $(".brand-logo").text(),
-			},function(data,status){
-				$("#content").html(data);
-			});
-		}else{
+	window.onpopstate = function (event) {
+		console.log(JSON.stringify(event.state));
+	}
+
+	window.onhashchange = function () {
+		console.log("hey " + location.hash)
+		window.history.replaceState({ state: window.location.hash }, "", window.location.hash);
+		if (location.hash === '#live-chat') {
+			liveChat();
+		} else if (location.hash === '#settings') {
+			setting();
+		} else if (location.hash === '') {
+			fileDashboard()
+		}
+	}
+
+	$(document).ready(function () {
+		let elems = document.querySelectorAll('.sidenav');
+		let elemsSide = document.querySelectorAll('.collapsible');
+		let instances = M.Sidenav.init(elems);
+		let instancesSide = M.Collapsible.init(elemsSide);
+		let dropdown = M.Dropdown.init(document.querySelectorAll('.dropdown-trigger'), {
+			constrainWidth: false,
+			alignment: "right",
+		});
+
+		if (!window.location.pathname.split('/')[2]) { //if url only base/{workspace}
+			if (location.hash === "#live-chat") {
+				$.post("/x/live-chat", {
+					username: '{{data.curuser.username}}',
+					workspacename: '{{data.workspace.name}}',
+				}, (data, status) => {
+					$("#content").html(data);
+				})
+			} else if (location.hash === "#settings") {
+				setting();
+			} else {
+				fileDashboard();
+			}
+		} else {
 			let docId = window.location.pathname.split('/')[2];
-			$.post("/x/document-details",{
-				id : docId,
-				workspacename : $(".brand-logo").text(),
-			},function(data,status){
+			$.post("/x/document-details", {
+				id: docId,
+				workspacename: '{{data.workspace.name}}',
+			}, function (data, status) {
 				$("#content").html(data);
 			});
 		}
-		
-		// new document form
-		
-		$("#slide-file>#new-document").click();
-
-		//showing file dashboard
-		$("#slide-file>#file-dashboard").click();
-
-		
 	});
 </script>

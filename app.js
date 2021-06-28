@@ -54,6 +54,10 @@ app.use('/auth', require('./routes/auth.js'));
 app.use('/u', require('./routes/users.js'));
 app.use('/w', require('./routes/workspace.js'));
 app.use('/p', require('./routes/profile.js'));
+app.use('/test',require('./routes/test'));
+app.use('/drive',(req,res) => {
+  res.render('drive',{layout:false})
+});
 app.use('/:workspace', require('./routes/workspace-page.js'))
 app.use('/', require('./routes/index.js'));                 
 
