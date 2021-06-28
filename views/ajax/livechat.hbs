@@ -60,45 +60,15 @@
           <p>12 Friends online</p>
         </div>
         <ul class="collection flush">
-          <li class="collection-item avatar active">
-            <div class="badged-circle online">
-              <img class="circle" src="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/portrait1.jpg?v=1218798423999129079" alt="avatar">
-            </div>
-            <span class="title">Jane Doe</span>
-            <p class="truncate">Lo-fi you probably haven't heard of them</p>
-          </li>
-
-          <li class="collection-item avatar">
-            <div class="badged-circle">
+          {{#each users}}
+          <li class="collection-item avatar chat-users" data-username="{{this.username}}" >
+            <div class="badged-circle {{#if this.online}} online {{/if}}">
               <img class="circle" src="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/portrait2.jpg?v=15342908036415923195" alt="avatar">
             </div>
-            <span class="title">John Chang</span>
-            <p class="truncate">etsy leggings raclette kickstarter four dollar toast</p>
+            <span class="title">{{this.username}}</span>
+            <p class="truncate">{{this.lastChat}}</p>
           </li>
-
-          <li class="collection-item avatar">
-            <div class="badged-circle">
-              <img class="circle" src="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/portrait3.jpg?v=4679613373594475586" alt="avatar">
-            </div>
-            <span class="title">Lisa Simpson</span>
-            <p class="truncate">Raw denim fingerstache food truck chia health goth synth</p>
-          </li>
-
-          <li class="collection-item avatar">
-            <div class="badged-circle">
-              <img class="circle" src="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/portrait2.jpg?v=15342908036415923195" alt="avatar">
-            </div>
-            <span class="title">Tobias Lee</span>
-            <p class="truncate">Forage man bun intelligentsia freegan PBR&amp;B banh mi asymmetrical chambray.</p>
-          </li>
-
-          <li class="collection-item avatar">
-            <div class="badged-circle">
-              <img class="circle" src="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/portrait1.jpg?v=1218798423999129079" alt="avatar">
-            </div>
-            <span class="title">Charlotte Doe</span>
-            <p class="truncate">intelligentsia freegan PBR&amp;B banh mi asymmetrical chambray.</p>
-          </li>
+          {{/each}}
         </ul>
       </div>
   </div>
@@ -160,4 +130,16 @@
     evt.preventDefault();
     sendMessage($('#textarea1'));
   });
+
+  $('.chat-users').click(evt => {
+    evt.stopPropagation()
+    debugger
+    {{!-- 1. Tambah class active --}}
+    {{!-- evt.target.addClass("active") --}}
+    alert("klk")
+    {{!-- 2. Ambil username --}}
+    alert(evt.target.getAttribute("data-username"))
+    {{!-- 3. Send data utk minta chat user tersebut --}}
+
+  })
 </script>
