@@ -2,7 +2,7 @@
   <div class="col l9">
     <div class="card">
       <div class="card-content">
-        <span class="card-title">Jane Doe</span>
+        <span class="card-title" id="chat-username">Jane Doe</span>
         <p>Currently Online</p>
       </div>
 
@@ -64,10 +64,10 @@
         <li class="collection-item avatar chat-users" data-username="{{this.username}}">
           <div class="badged-circle {{#if this.online}} online {{/if}}">
             <img class="circle"
-              src="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/portrait2.jpg?v=15342908036415923195" alt="avatar">
+              src="https://ui-avatars.com/api/?name={{this.username}}" alt="avatar">
           </div>
           <span class="title">{{this.username}}</span>
-          <p class="truncate">{{this.lastChat}}</p>
+          <p class="truncate">lorem</p>
         </li>
         {{/each}}
       </ul>
@@ -139,12 +139,11 @@
     $('.chat-users').removeClass('active');
     $(this).toggleClass('active');
 
-    //{ { !--2. Ambil username-- } }
-    //{ { !--alert(evt.target.getAttribute("data-username")) --} }
-    /*console.log(evt.target.getAttribute("data-username"));
-    console.log($(this).attr('data-username'));
-    $(this).toggleClass('active')
-    $(this).attr('data-username')*/
-    //{ { !--3. Send data utk minta chat user tersebut-- } }
+    /* 2. Ambil Username*/    
+    $('#chat-username').text($(this).attr('data-username'))
+    
+  
+    /* 3. Send data utk minta chat user tersebut */
+
   })
 </script>
