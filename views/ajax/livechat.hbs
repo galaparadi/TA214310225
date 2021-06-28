@@ -55,27 +55,29 @@
   </div>
   <div class="col l3">
     <div class="card">
-        <div class="card-content">
-          <span class="card-title">Friends</span>
-          <p>12 Friends online</p>
-        </div>
-        <ul class="collection flush">
-          {{#each users}}
-          <li class="collection-item avatar chat-users" data-username="{{this.username}}" >
-            <div class="badged-circle {{#if this.online}} online {{/if}}">
-              <img class="circle" src="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/portrait2.jpg?v=15342908036415923195" alt="avatar">
-            </div>
-            <span class="title">{{this.username}}</span>
-            <p class="truncate">{{this.lastChat}}</p>
-          </li>
-          {{/each}}
-        </ul>
+      <div class="card-content">
+        <span class="card-title">Friends</span>
+        <p>12 Friends online</p>
       </div>
+      <ul class="collection flush">
+        {{#each users}}
+        <li class="collection-item avatar chat-users" data-username="{{this.username}}">
+          <div class="badged-circle {{#if this.online}} online {{/if}}">
+            <img class="circle"
+              src="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/portrait2.jpg?v=15342908036415923195" alt="avatar">
+          </div>
+          <span class="title">{{this.username}}</span>
+          <p class="truncate">{{this.lastChat}}</p>
+        </li>
+        {{/each}}
+      </ul>
+    </div>
   </div>
 </div>
 
 <script>
   $('.chat-container').scrollTop(document.querySelector('.chat-container').scrollHeight - document.querySelector('.chat-container').clientHeight)
+
   function sendMessage(textInput) {
     sendChat(textInput.val());
     socket.emit('sending-dochub', textInput.val());
@@ -84,14 +86,14 @@
   function getReceivanId(packet) {
     socket.emit('ask-private-chat', packet);
   }
-  function privateChat(msg,destId){
+  function privateChat(msg, destId) {
     socket.emit('private-chat', msg, destId)
   }
 
 
   socket.on('someone-ask-private-chat', msg => {
-    if(msg.dest===username){
-      socket.emit('receive-private-chat',msg)
+    if (msg.dest === username) {
+      socket.emit('receive-private-chat', msg)
     }
   });
   socket.on('receive-private-chat', msg => {
@@ -101,11 +103,11 @@
   socket.on('sending-dochub', msg => {
     receiveChat(msg);
   });
-  socket.on('private-chat',msg => {
+  socket.on('private-chat', msg => {
     receiveChat(msg);
   })
 
-  
+
   let sendChat = (message) => {
     let chatText = `<div class="chat-message right">
             <img class="circle"
@@ -131,15 +133,18 @@
     sendMessage($('#textarea1'));
   });
 
-  $('.chat-users').click(evt => {
+  $('.chat-users').click(function (evt) {
     evt.stopPropagation()
-    debugger
-    {{!-- 1. Tambah class active --}}
-    {{!-- evt.target.addClass("active") --}}
-    alert("klk")
-    {{!-- 2. Ambil username --}}
-    alert(evt.target.getAttribute("data-username"))
-    {{!-- 3. Send data utk minta chat user tersebut --}}
+    /* 1. Tambah class active */
+    $('.chat-users').removeClass('active');
+    $(this).toggleClass('active');
 
+    //{ { !--2. Ambil username-- } }
+    //{ { !--alert(evt.target.getAttribute("data-username")) --} }
+    /*console.log(evt.target.getAttribute("data-username"));
+    console.log($(this).attr('data-username'));
+    $(this).toggleClass('active')
+    $(this).attr('data-username')*/
+    //{ { !--3. Send data utk minta chat user tersebut-- } }
   })
 </script>
