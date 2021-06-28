@@ -63,8 +63,7 @@
         {{#each users}}
         <li class="collection-item avatar chat-users" data-username="{{this.username}}">
           <div class="badged-circle {{#if this.online}} online {{/if}}">
-            <img class="circle"
-              src="https://ui-avatars.com/api/?name={{this.username}}" alt="avatar">
+            <img class="circle" src="https://ui-avatars.com/api/?name={{this.username}}" alt="avatar">
           </div>
           <span class="title">{{this.username}}</span>
           <p class="truncate">lorem</p>
@@ -80,16 +79,12 @@
 
   function sendMessage(textInput) {
     sendChat(textInput.val());
-    socket.emit('sending-dochub', textInput.val());
+    socket.emit('private-chat', textInput.val(), $('button').val());
     textInput.val('')
   }
-  function getReceivanId(packet) {
-    socket.emit('ask-private-chat', packet);
+  function getReceivanId(username) {
+    socket.emit('ask-private-chat', { dest: username });
   }
-  function privateChat(msg, destId) {
-    socket.emit('private-chat', msg, destId)
-  }
-
 
   socket.on('someone-ask-private-chat', msg => {
     if (msg.dest === username) {
@@ -97,7 +92,8 @@
     }
   });
   socket.on('receive-private-chat', msg => {
-    console.log(msg);
+    if (msg.dest === $('#chat-username').text())
+      $('button').val(msg.destId);
   });
 
   socket.on('sending-dochub', msg => {
@@ -139,11 +135,8 @@
     $('.chat-users').removeClass('active');
     $(this).toggleClass('active');
 
-    /* 2. Ambil Username*/    
+    /* 2. Ambil Username*/
     $('#chat-username').text($(this).attr('data-username'))
-    
-  
-    /* 3. Send data utk minta chat user tersebut */
-
+    getReceivanId($('#chat-username').text());
   })
 </script>

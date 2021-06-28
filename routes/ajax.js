@@ -11,26 +11,8 @@ const reqAPI = require('../lib/requestAPI');
 
 // =======================================END of BLock=======================================
 router.post("/live-chat",
-	(req, res, next) => {
-		console.log(res.locals);
-		// const {users} = dataSource.Workspaces().getUsers({name: req.body.workspacename});
-		let users = [
-			{
-				username: "t1",
-				lastChat: "t1",
-				online:true
-			},
-			{
-				username: "t2",
-				lastChat: "t2",
-				online:false
-			},
-			{
-				username: "t3",
-				lastChat: "t3",
-				online:false
-			},
-		]
+	async (req, res, next) => {
+		const {users} = await dataSource.Workspaces().getUsers({name: req.body.workspacename});
 		res.render('ajax/livechat.hbs', { username: req.body.username, workspacename: String(req.body.workspacename), users, layout: false });
 	})
 
