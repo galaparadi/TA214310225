@@ -51,7 +51,8 @@ exports.isLogin = function (req, res, next) {
   if (req.user) {
     next();
   } else {
-    next('route');
+    // next('router');
+    res.redirect('/');
   }
 }
 

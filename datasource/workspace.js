@@ -45,6 +45,15 @@ class Workspace {
         }
     }
 
+    async getChats(data){
+        try {
+            let response = await axios.get(`${this._base_url}/chats/${data.username}?workspace=${data.workspace}&username=${data.receiver}`);
+            return response.data;
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
     async getDocuments({ name }) {
         try {
             let response = await axios.get(`${this._base_url}/workspaces/${name}/documents`, {
