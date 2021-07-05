@@ -76,7 +76,8 @@
 
 <script>
   $('.chat-container').scrollTop(document.querySelector('.chat-container').scrollHeight - document.querySelector('.chat-container').clientHeight)
-  $('.chat-wrapper').html('<div class="chat-message"></div>');
+  $('.chat-wrapper').html('');
+  socket.emit('im-online', $('#dropdown1>li:first-child').text());
 
   function sendMessage(textInput) {
     let message = textInput.val();
@@ -89,6 +90,10 @@
     socket.emit('ask-private-chat', { dest: username });
   }
 
+  socket.on('who-online', username => { 
+    $(`.chat-users[data-username="${username}"]>.badged-circle`).addClass('online');
+    socket.emit('im-online', $('#dropdown1>li:first-child').text());
+  });
   socket.on('someone-ask-private-chat', msg => {
     if (msg.dest === username) {
       socket.emit('receive-private-chat', msg);
@@ -98,16 +103,15 @@
     if (msg.dest === $('#chat-username').text())
       $('button').val(msg.destId);
   });
-
   socket.on('private-chat', (msg, sender) => {
     if (sender === $('#chat-username').text()) {
       renderReceiveChat(msg);
       $('.avatar[data-username="dudung"]>p>.message').text(msg)
     } else {
-      let conter = $(`.avatar[data-username="${sender}"]>p>.badge`).text();
-      conter++
+      let counter = $(`.avatar[data-username="${sender}"]>p>.badge`).text();
+      counter++
       $(`.avatar[data-username="${sender}"]>p>.badge`).addClass('new');
-      $(`.avatar[data-username="${sender}"]>p>.badge`).text(conter);
+      $(`.avatar[data-username="${sender}"]>p>.badge`).text(counter);
       $(`.avatar[data-username="${sender}"]>p>.message`).text(msg)
     }
   });
