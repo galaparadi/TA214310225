@@ -66,7 +66,7 @@
             <img class="circle" src="https://ui-avatars.com/api/?name={{this.username}}" alt="avatar">
           </div>
           <span class="title">{{this.username}}</span>
-          <p class="truncate">lorem</p>
+          <p class="truncate"><span class="badge"></span><span class="message">lorem</span></p>
         </li>
         {{/each}}
       </ul>
@@ -76,11 +76,14 @@
 
 <script>
   $('.chat-container').scrollTop(document.querySelector('.chat-container').scrollHeight - document.querySelector('.chat-container').clientHeight)
+  $('.chat-wrapper').html('<div class="chat-message"></div>');
 
   function sendMessage(textInput) {
-    sendChat(textInput.val());
-    socket.emit('private-chat', textInput.val(), $('button').val());
-    textInput.val('')
+    let message = textInput.val();
+    let receiver = $('#chat-username').text();
+    renderSendChat(message);
+    socket.emit('private-chat', { message, receiver }, $('button').val());
+    textInput.val('');
   }
   function getReceivanId(username) {
     socket.emit('ask-private-chat', { dest: username });
@@ -88,7 +91,7 @@
 
   socket.on('someone-ask-private-chat', msg => {
     if (msg.dest === username) {
-      socket.emit('receive-private-chat', msg)
+      socket.emit('receive-private-chat', msg);
     }
   });
   socket.on('receive-private-chat', msg => {
@@ -96,15 +99,21 @@
       $('button').val(msg.destId);
   });
 
-  socket.on('sending-dochub', msg => {
-    receiveChat(msg);
+  socket.on('private-chat', (msg, sender) => {
+    if (sender === $('#chat-username').text()) {
+      renderReceiveChat(msg);
+      $('.avatar[data-username="dudung"]>p>.message').text(msg)
+    } else {
+      let conter = $(`.avatar[data-username="${sender}"]>p>.badge`).text();
+      conter++
+      $(`.avatar[data-username="${sender}"]>p>.badge`).addClass('new');
+      $(`.avatar[data-username="${sender}"]>p>.badge`).text(conter);
+      $(`.avatar[data-username="${sender}"]>p>.message`).text(msg)
+    }
   });
-  socket.on('private-chat', msg => {
-    receiveChat(msg);
-  })
 
 
-  let sendChat = (message) => {
+  let renderSendChat = (message) => {
     let chatText = `<div class="chat-message right">
             <img class="circle"
               src="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/portrait2.jpg?v=15342908036415923195" alt="avatar">
@@ -114,7 +123,7 @@
     $('.chat-container').scrollTop(document.querySelector('.chat-container').scrollHeight - document.querySelector('.chat-container').clientHeight)
   }
 
-  let receiveChat = (message) => {
+  let renderReceiveChat = (message) => {
     let chatText = `<div class="chat-message left">
             <img class="circle"
               src="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/portrait2.jpg?v=15342908036415923195" alt="avatar">
@@ -122,6 +131,29 @@
           </div>`;
     $('.chat-message:last-child').after(chatText)
     $('.chat-container').scrollTop(document.querySelector('.chat-container').scrollHeight - document.querySelector('.chat-container').clientHeight)
+  }
+
+  let renderChats = (data, username) => {
+    $('.chat-wrapper').html('<div class="chat-message"></div>');
+    data.forEach(item => {
+      if (item.chat.sender === username) {
+        renderSendChat(item.chat.message);
+      } else {
+        renderReceiveChat(item.chat.message)
+      }
+    });
+    $('.chat-message:first-child').remove();
+  }
+
+  let getChats = (sender, receiver, workspace) => {
+    $.post("http://localhost/x/pull-chats",
+      {
+        username: sender,
+        workspacename: workspace,
+        receiver: receiver,
+      }, (data) => {
+        renderChats(data, sender);
+      });
   }
 
   $('.chat-input>form').submit(evt => {
@@ -134,9 +166,12 @@
     /* 1. Tambah class active */
     $('.chat-users').removeClass('active');
     $(this).toggleClass('active');
+    $(`.avatar[data-username="${$(this).attr('data-username')}"]>p>.badge`).removeClass('new');
+    $(`.avatar[data-username="${$(this).attr('data-username')}"]>p>.badge`).text('');
 
     /* 2. Ambil Username*/
     $('#chat-username').text($(this).attr('data-username'))
     getReceivanId($('#chat-username').text());
+    getChats($('#dropdown1>li:first-child').text(), $('#chat-username').text(), $('.brand-logo>a').text());
   })
 </script>
