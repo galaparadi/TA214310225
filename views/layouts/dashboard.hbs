@@ -4,13 +4,14 @@
 <head>
   <title>{{data.workspace.name}}</title>
   <!-- Compiled and minified CSS -->
+  <link href="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/admin-materialize.min.css?v=8850535670742419153"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <link href="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/admin-materialize.min.css?v=8850535670742419153" rel="stylesheet">
   <style type="text/css">
     /* Style untuk fixed nav dikiri*/
     /*body {
@@ -27,7 +28,13 @@
       }
     }
     */
+    body {
+      display: block;
+    }
 
+    .divider {
+      margin: auto;
+    }
 
     /* style untuk avatar*/
     #avatar {
@@ -51,7 +58,6 @@
     }
 
     /* Style untuk chat box*/
-    
   </style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
@@ -64,7 +70,7 @@
     let username = '{{data.curuser.username}}';
     var socket = io(`http://localhost:8080/${wp}`, {
       query: {
-        'userId': username,
+        'username': username,
         'workspace': wp
       }
     });
