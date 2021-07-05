@@ -135,8 +135,12 @@
 			liveChat();
 		} else if (location.hash === '#settings') {
 			setting();
-		} else if (location.hash === '') {
-			fileDashboard()
+		} else if (location.hash === '#new-document') {
+			newDocument();
+		} else if (location.hash.match(/#file-id=\w+/)) {
+			$("#content").html('fsdfdf');
+		} else {
+			fileDashboard();
 		}
 	}
 
@@ -158,8 +162,12 @@
 				}, (data, status) => {
 					$("#content").html(data);
 				})
-			} else if (location.hash === "#settings") {
+			} else if (location.hash === '#settings') {
 				setting();
+			} else if (location.hash === '#new-document') {
+				newDocument();
+			} else if (location.hash.match(/#file-id=\w+/)) {
+				$("#content").html('fsdfdf');
 			} else {
 				fileDashboard();
 			}
