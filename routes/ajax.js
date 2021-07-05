@@ -10,9 +10,19 @@ const reqAPI = require('../lib/requestAPI');
 // ====================================this block not valid==================================
 
 // =======================================END of BLock=======================================
+router.post("/pull-chats", async (req, res, next) => {
+	const { data: chats } = await dataSource.Workspaces().getChats({
+		username: req.body.username,
+		workspace: req.body.workspacename,
+		receiver: req.body.receiver
+	});
+	res.send(chats);
+})
+
 router.post("/live-chat",
 	async (req, res, next) => {
-		const {users} = await dataSource.Workspaces().getUsers({name: req.body.workspacename});
+		let { users } = await dataSource.Workspaces().getUsers({ name: req.body.workspacename });
+		users = users.filter(user => user.username !== req.body.username);
 		res.render('ajax/livechat.hbs', { username: req.body.username, workspacename: String(req.body.workspacename), users, layout: false });
 	})
 
