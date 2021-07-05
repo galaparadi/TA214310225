@@ -14,7 +14,7 @@
 		</div>
 		<div class="col l3">
 			<div class="input-field">
-				<a id="add-document" class="waves-effect btn"><i
+				<a id="add-document" class="waves-effect btn" href="#new-document"><i
 						class="material-icons right">insert_drive_file</i>Tambah Dokumen</a>
 			</div>
 		</div>
@@ -66,7 +66,7 @@
 
 <script type="text/javascript">
 	$("#add-document").click(() => {
-		let workspacename = $(".brand-logo").text();
+		let workspacename = $(".brand-logo>a").text();
 		$.post("http://localhost/x/new-document",{
 			workspacename
 		}, function (data, status) {
@@ -75,13 +75,13 @@
 	});
 	$(".document-content").click(function () {
 		let name = $(this).find(".card-title").children().text();
-		let workspacename = $(".brand-logo").text();
+		let workspacename = $(".brand-logo>a").text();
 		let docId = $(this).attr("id");
 		$.post("http://localhost/x/document-details", {
 			id: docId,
 			workspacename: workspacename,
 		}, function (data, status) {
-			window.history.pushState({ "html": "something", "pageTitle": "file saya" }, "", "http://localhost/" + workspacename + "/" + docId);
+			window.history.pushState({ "html": "something", "pageTitle": "file saya" }, "", "http://localhost/" + workspacename + "/#file-id=" + docId);
 			$("#content").html(data);
 		});
 	})
