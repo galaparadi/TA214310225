@@ -66,12 +66,10 @@
   {{{body}}}
   <script src="http://localhost:8080/socket.io/socket.io.js"></script>
   <script>
-    let wp = '{{data.workspace.name}}';
-    let username = '{{data.curuser.username}}';
-    var socket = io(`http://localhost:8080/${wp}`, {
+    let username = '{{data.username}}';
+    let socket = io(`http://localhost:8080`, {
       query: {
         'username': username,
-        'workspace': wp
       }
     });
   </script>

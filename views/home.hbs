@@ -3,6 +3,7 @@
 	<div class="row">
 		<div class="col l3" id="workspace-list">
 			<h5>Workspace list</h5>
+			<div class="divider"></div>
 			{{#workspace workspaces}}
 			{{> components/collections this.names}}
 			{{/workspace}}
@@ -10,30 +11,41 @@
 
 		<div class="col l9">
 			{{!-- dashboard feed item --}}
-			{{#if feeds}}
-			{{#each feeds}}
-			<div class="card-panel">
-				<div class="row" style="margin-bottom: 5px">
-					<div class="col l12 s12 valign-wrapper">
-						<p style="margin-top: 0px"><b><a href="/{{this.workspace}}">{{this.workspace}}</a></b>
-							{{this.date}}
-						</p>
+			<h5>Feed Notifikasi</h5>
+			<div class="divider"></div>
+			<div id="notif-wrapper">
+				{{#if feeds}}
+				{{#each feeds}}
+				<div class="card-panel">
+					<div class="row" style="margin-bottom: 5px">
+						<div class="col l9 s9 valign-wrapper">
+							<p style="margin-top: 0px"><b><a href="/{{this.workspace}}"
+										style="text-transform: uppercase;">{{this.workspace}}</a></b>
+								{{this.date}}
+							</p>
+						</div>
+						<div class="col l3 s3">
+							<img class="circle responsive-img right"
+								src="https://ui-avatars.com/api/?name=galant.paradise">
+						</div>
 					</div>
-				</div>
 
-				{{!-- dashboard feed text --}}
-				{{this.message}}
-			</div>
-			{{/each}}
-			{{else}}
-			<div class="row">
-				<div class="col s12 center-align">
-					<div class="section">
-						<h5>tidak ada notifikasi</h5>
+					{{!-- dashboard feed text --}}
+					<div class="row">
+						<div class="col">{{this.message}}</div>
 					</div>
 				</div>
+				{{/each}}
+				{{else}}
+				<div class="row">
+					<div class="col s12 center-align">
+						<div class="section">
+							<h5>tidak ada notifikasi</h5>
+						</div>
+					</div>
+				</div>
+				{{/if}}
 			</div>
-			{{/if}}
 
 		</div>
 
@@ -73,17 +85,56 @@
 	</div>
 </div>
 
+<script src="http://localhost:4000/socket.io/socket.io.js"></script>
 <script type="text/javascript">
-	$('a[href="#user-setting').click(() => {
-		$.post('/x/user-settings', {}, (data, status) => {
-			$('.container').html(data)
-		})
-	})
+	let username = '{{username}}';
+	let socket = io(`http://localhost:4000`, {
+		query: {
+			'username': username
+		}
+	});
+
+	socket.on('notification', data => {
+		console.log('getting notif....')
+		pushNotif(data);
+	});
+
+	let pushNotif = (data) => {
+		renderNotifItem(data);
+	}
+
+	let renderNotifItem = ({ message, workspace }) => {
+		let notifItemTemplate = `<div class="card-panel">
+				<div class="row" style="margin-bottom: 5px">
+					<div class="col l9 s9 valign-wrapper">
+						<p style="margin-top: 0px"><b><a href="/${workspace}"
+									style="text-transform: uppercase;">${workspace}</a></b>
+							12/12/1222
+						</p>
+					</div>
+					<div class="col l3 s3">
+						<img class="circle responsive-img right" src="https://ui-avatars.com/api/?name=galant.paradise">
+					</div>
+				</div>				
+				<div class="row">
+					<div class="col">${message}</div>
+				</div>
+			</div>`;
+		$('#notif-wrapper>.card-panel:first').before(notifItemTemplate);
+	}
+
+	$(window).on('hashchange', e => {
+		if (location.hash === '#user-setting') {
+			fetchUserSettingSection();
+		} else {
+
+		}
+	});
 
 	if (location.hash === '#user-setting') {
 		fetchUserSettingSection();
-	}else{
-		
+	} else {
+
 	}
 
 	function fetchUserSettingSection() {
