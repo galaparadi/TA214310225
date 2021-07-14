@@ -64,7 +64,7 @@ passport.use(new LocalStrategy(
       if (!user) {
         return done(null, false, { status });
       }
-      return done(null, {user});
+      return done(null, {user, status});
     } catch (err) {
       console.log(err);
       if (err) { return done(null, false, { status }); }
