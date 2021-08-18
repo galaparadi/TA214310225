@@ -1,8 +1,11 @@
 <div class="card-panel">
 	<h3>New Document</h3>
 	<div class="row">
-		<form enctype="multipart/form-data" method="post" action="http://localhost/{{workspacename}}/file/upload" class="col s12">
-			<input type="hidden" name="workspace" value="{{workspacename}}">			
+		<form enctype="multipart/form-data" method="post" action="http://localhost/{{workspacename}}/file/upload"
+			class="col s12">
+			<input type="hidden" name="workspace" value="{{workspacename}}">
+			<input type="hidden" name="drive-id" value="">
+			<input type="hidden" name="workspace" value="{{workspacename}}">
 			<div class="row">
 				<div class="col s12 input-field">
 					<input type="text" name="filename">
@@ -14,6 +17,9 @@
 					<input type="text" name="level">
 					<label for="level">level</label>
 				</div>
+			</div>
+			<div class="btn" onclick="loadPicker()">
+				Google Drive
 			</div>
 			<div class="file-field input-field">
 				<div class="btn">

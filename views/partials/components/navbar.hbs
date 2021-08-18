@@ -3,10 +3,15 @@
 		<a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 		<ul id="nav-mobile" class="right hide-on-med-and-down">
 			{{#if login}}
-			<li><a href="/">Hallo, {{username}}</a></li>
-			<li><a href="#"><i class="material-icons">notifications</i></a></li>
-			<li><a href="#" id="dudung" class="dropdown-trigger" data-target="dropdown1"><i
-						class="material-icons">person</i></a></li>
+			<li><a href="/" class="username-link" id="{{username}}">Hallo, {{username}}</a></li>
+			<li><a href="#" class="dropdown-trigger" data-target="notif-items"><i
+						class="material-icons">notifications</i>
+					{{#if notifications.count}}
+					<span class="new badge red" style="position: relative;bottom: 2.5rem;right: -0.5rem;min-width: 1rem;display:block;float:right" data-badge-caption="">{{notifications.count}}</span>
+					{{/if}}
+				</a></li>
+			<li><a href="#" class="dropdown-trigger" data-target="dropdown1"><i class="material-icons">person</i></a>
+			</li>
 			{{else}}
 			<li><a href="#modal1" class="modal-trigger">Login</a></li>
 			{{!-- <li><a href="/u/register">Daftar</a></li> --}}
@@ -19,16 +24,47 @@
 	{{#if login}}
 	<li><a href="#">Hallo {{username}}</a></li>
 	<li><a href="#">Notification</a></li>
-	<li><a href="#" id="dudung" class="dropdown-trigger" data-target="dropdown1">Profile</a></li>
+	<li><a href="#" id="profile-menu2" class="dropdown-trfigger" data-target="dropdown1">Profile</a></li>
 	{{else}}
 	<li><a href="#modal1" class="modal-trigger">Login</a></li>
 	<li><a href="/u/register">Daftar</a></li>
 	{{/if}}
 </ul>
 <ul id="dropdown1" class="dropdown-content">
-	<li><a href="#user-setting"><i class="material-icons">settings</i>setting</a></li>
+	<li><a href="#user-settings"><i class="material-icons">settings</i>setting</a></li>
 	<li class="divider"></i></li>
 	<li><a href="/u/auth/logout"><i class="material-icons">exit_to_app</i>Logout</a></li>
+</ul>
+<ul id="notif-items" class="dropdown-content" style="max-height: 275px;max-width: 300px">
+	<li tabindex="-1">
+		<div class="row">
+			<div class="col l12">
+				<h5>Notifikasi</h5>
+			</div>
+		</div>
+	</li>
+	<li class="divider" tabindex="-1"></li>
+	{{#if notifications.items}}
+	{{#each notifications.items}}
+	{{#unless this.statusRead}}
+	<li>
+		<div class="row" id="{{this._id}}">
+			<div class="col l12" style="margin:12px 0px">{{this.content.message}}</div>
+			<div class="col l12"><a class="btn" style="margin: 0"
+					onclick="submitNotif('{{this._id}}','{{../username}}')">terima</a></div>
+		</div>
+	</li>
+	{{/unless}}
+	{{/each}}
+	{{else}}
+	<li>
+		<div class="row">
+			<div class="col l12 center-align" style="width: 300px;margin:12px 0px">Tidak ada notifikasi terbaru</div>
+		</div>
+	</li>
+	{{/if}}
+
+
 </ul>
 <div id="modal1" class="modal card" style="width:35%">
 	<div class="modal-content">
@@ -100,8 +136,8 @@
 </div>
 <script>
 	document.addEventListener('DOMContentLoaded', function () {
-		var elemsDropdown = document.getElementById('dudung');
-		var instancesDropdown = M.Dropdown.init(elemsDropdown, { constrainWidth: false });
+		var elemsDropdown = document.querySelectorAll('.dropdown-trigger');
+		var instancesDropdown = M.Dropdown.init(elemsDropdown, { constrainWidth: false, coverTrigger: false });
 		var elemsModal = document.querySelectorAll('.modal');
 		var instancesModal = M.Modal.init(elemsModal);
 		var elemsSidenav = document.querySelectorAll('.sidenav');
@@ -127,4 +163,8 @@
 			}
 		});
 	});
+
+	let notifBadge = (n) => {
+		$("#nav-mobile>li:nth-child(2)>a").append(`<span class='badge new'>${n}</span>`)
+	}
 </script>

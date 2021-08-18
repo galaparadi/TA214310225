@@ -1,5 +1,5 @@
 <div class="row equal-height-grid">
-  <div class="col l9">
+  <div class="col l12">
     <div class="card">
       <div class="card-content">
         <span class="card-title" id="chat-username">Jane Doe</span>
@@ -53,31 +53,11 @@
       </div>
     </div>
   </div>
-  <div class="col l3">
-    <div class="card">
-      <div class="card-content">
-        <span class="card-title">Friends</span>
-        <p>12 Friends online</p>
-      </div>
-      <ul class="collection flush">
-        {{#each users}}
-        <li class="collection-item avatar chat-users" data-username="{{this.username}}">
-          <div class="badged-circle {{#if this.online}} online {{/if}}">
-            <img class="circle" src="https://ui-avatars.com/api/?name={{this.username}}" alt="avatar">
-          </div>
-          <span class="title">{{this.username}}</span>
-          <p class="truncate"><span class="badge"></span><span class="message">lorem</span></p>
-        </li>
-        {{/each}}
-      </ul>
-    </div>
-  </div>
 </div>
 
 <script>
   $('.chat-container').scrollTop(document.querySelector('.chat-container').scrollHeight - document.querySelector('.chat-container').clientHeight)
   $('.chat-wrapper').html('');
-  socket.emit('im-online', $('#dropdown1>li:first-child').text());
 
   function sendMessage(textInput) {
     let message = textInput.val();
@@ -86,35 +66,10 @@
     socket.emit('private-chat', { message, receiver }, $('button').val());
     textInput.val('');
   }
-  function getReceivanId(username) {
+  
+  function getReceivantId(username) {
     socket.emit('ask-private-chat', { dest: username });
   }
-
-  socket.on('who-online', username => { 
-    $(`.chat-users[data-username="${username}"]>.badged-circle`).addClass('online');
-    socket.emit('im-online', $('#dropdown1>li:first-child').text());
-  });
-  socket.on('someone-ask-private-chat', msg => {
-    if (msg.dest === username) {
-      socket.emit('receive-private-chat', msg);
-    }
-  });
-  socket.on('receive-private-chat', msg => {
-    if (msg.dest === $('#chat-username').text())
-      $('button').val(msg.destId);
-  });
-  socket.on('private-chat', (msg, sender) => {
-    if (sender === $('#chat-username').text()) {
-      renderReceiveChat(msg);
-      $('.avatar[data-username="dudung"]>p>.message').text(msg)
-    } else {
-      let counter = $(`.avatar[data-username="${sender}"]>p>.badge`).text();
-      counter++
-      $(`.avatar[data-username="${sender}"]>p>.badge`).addClass('new');
-      $(`.avatar[data-username="${sender}"]>p>.badge`).text(counter);
-      $(`.avatar[data-username="${sender}"]>p>.message`).text(msg)
-    }
-  });
 
 
   let renderSendChat = (message) => {
@@ -175,7 +130,7 @@
 
     /* 2. Ambil Username*/
     $('#chat-username').text($(this).attr('data-username'))
-    getReceivanId($('#chat-username').text());
+    getReceivantId($('#chat-username').text());
     getChats($('#dropdown1>li:first-child').text(), $('#chat-username').text(), $('.brand-logo>a').text());
   })
 </script>

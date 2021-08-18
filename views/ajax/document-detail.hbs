@@ -1,20 +1,17 @@
-<div class="section">
+<div class="section" id="{{document._id}}">
 	<h3>{{document.name}}</h3>
-	<h4>Version 1.0</h4>
+	<h4>Version {{document.currentVersion}}</h4>
 	<div class="document-viewer" style="margin-top: 20px">
-		<embed src="/file/download/{{name}}/{{document._id}}" width="100%" height="400px"/>
-		{{!-- <iframe src="http://docs.google.com/viewer?url=https://b4f72c963515.ngrok.io/persemakmuran/documents/{{document.fsId}}/file&embedded=true" width="100%" height="600"></iframe> --}}
+		{{!-- <embed src="/file/download/{{name}}/{{document._id}}" width="100%" height="400px" /> --}}
+		{{!-- <iframe
+			src="http://docs.google.com/viewer?url=https://b4f72c963515.ngrok.io/persemakmuran/documents/{{document.fsId}}/file&embedded=true"
+			width="100%" height="600"></iframe> --}}
 		<a class="waves-effect waves-teal btn-flat">View</a>
 		<a class="waves-effect waves-teal btn-flat">Change</a>
 		<a class="waves-effect waves-teal btn-flat right"><i class="material-icons black-text">share</i></a>
-		<a class="waves-effect waves-teal btn-flat right" target="_blank" href="/file/download/{{document.name}}"><i class="material-icons black-text">file_download</i></a>
+		<a class="waves-effect waves-teal btn-flat right" target="_blank" href="/file/download/{{document.name}}"><i
+				class="material-icons black-text">file_download</i></a>
 		<a class="waves-effect waves-teal btn-flat right"><i class="material-icons black-text">link</i></a>
-
-		<!-- menggunakan google doc viewer. tidak bisa digunakan di localhost -->
-
-<!-- 		<iframe src="http://docs.google.com/viewer?url=http://localhost/pdfworkspace/file/download/{{document.fsId}}&embedded=true" width="100%" height="600"></iframe>
- -->
-	
 	</div>
 
 </div>
@@ -32,20 +29,44 @@
 		</div>
 		<div class="card-content">
 			<div id="document-detail">
-				<p>Author : <a target="_blank" href="/p/{{document.author.username}}">{{document.author.username}}</a></p>
+				<p>Author : <a target="_blank" href="/p/{{document.author.username}}">{{document.author.username}}</a>
+				</p>
 				<p>Last Update : DDMMYYYY</p>
 			</div>
 			<div id="document-version">
-				<a class="waves-effect waves-teal btn">Add</a>
+				<div id="document-version-form-container" class="hidden" style="display:none;">
+					<form id="version-form" enctype="multipart/form-data" method="post" class="col s12"
+						action="/{{name}}/doc/{{document._id}}/version">
+						<input type="hidden" name="file-name" value="{{document.name}}">
+						<input type="hidden" name="document-id" value="{{document._id}}">
+						<div class="file-field input-field">
+							<div class="btn">
+								<span>File</span>
+								<input type="file" name="document">
+							</div>
+							<div class="file-path-wrapper">
+								<input class="file-path validate" type="text" name="file-version-name">
+							</div>
+						</div>
+						<button class="btn waves-effect waves-light" type="submit" name="action">Add
+							<i class="material-icons right">send</i>
+						</button>
+					</form>
+				</div>
+				<a class="waves-effect waves-teal btn" onclick="toggleVersionForm()">Add</a>
+				<div id="versions-container"></div>
 			</div>
 			<div id="document-comment">
-				<div class="input-field">
-					<textarea id="comment-input" class="materialize-textarea" name="comment-input"></textarea>
-          			<label for="comment-input">Comment</label>
-				</div>
-				<a class="btn right" onclick="sendComment()">send</a>
+				<form id="comment-form" action="/{{name}}/doc/{{document._id}}/comment" method="post">
+					<div class="input-field">
+						<textarea id="comment-input" type="text" class="materialize-textarea"
+							name="comment-input"></textarea>
+						<label for="comment-input">Comment</label>
+					</div>
+					<input type="hidden" name="document-id" value="{{document._id}}">
+					<button class="btn right" type="submit" name="action">send</button>
+				</form>
 				<div style="clear: both;" id="comment-list">
-					
 				</div>
 			</div>
 		</div>
@@ -58,66 +79,76 @@
 	$(".indicator").addClass("black");
 	$(".tab a").addClass("black-text");
 
-	function sendComment(){
-		var link = "http://localhost/api/w/" + $(".brand-logo").text() + "/doc/" + "{{document.name}}" + "/comment";
-		
-		$.post(link,{
-			documentId: "{{document.id}}",
-			comment: $("#comment-input").val()
-		},function(data,status){
-			initComment();
+	function sendComment({ url }) {
+		let comment = {
+			workspace: $('.brand-logo>a').text(),
+			comment: $('#comment-input').val(),
+			documentId: $('#content > div:nth-child(1)').attr('id'),
+		}
+		$.post(url, comment, function (data, status) {
+			initComment({ documentId: $('#content > div:nth-child(1)').attr('id') });
 		});
 	}
 
-	function toggle(){
-		$(".document-viewer").toggle();
-	}
-
-	function back(){
-		$.post("http://localhost/ajax/file-dashboard",{
-			ObjectId: $(".brand-logo").attr("id")
-		},function(data,status){
-			$("#content").html(data);
-		});
-	}
-	
-	function initComment(){
-		var link = "http://localhost/api/w/" + $(".brand-logo").text() + "/doc/" + "{{document.name}}" + "/comments";
-		$.get(link,function(data,status){
-			$("#comment-list").html("");
-			var textClass = "grey-text";
-			var ul = document.createElement("ul");
-			data.forEach(function(item,index){
-				var li = document.createElement("li");
-				li.id = "comment-" + index;
-				var div = document.createElement("div");
-				div.className = "section";
-
-				var b = document.createElement("b");
-				b.innerHTML = item.author.username;
-
-				var span = document.createElement("span");
-				span.className = textClass;
-				span.innerHTML = " " + item.datePost;
-
-				var p = document.createElement("p");
-				p.innerHTML = item.comment;
-
-				var pBottom = document.createElement("p");
-				pBottom.innerHTML = "<b class='" + textClass + "'>balas</b>"
-
-				var text = document.createTextNode("wow " + index);
-				
-				div.appendChild(b)
-				div.appendChild(span)
-				div.appendChild(p)
-				div.appendChild(pBottom);
-
-				ul
-				.appendChild(li)
-				.appendChild(div);
-			});
-			$("#comment-list").append(ul);
+	function submitNewVersion({ form, url }) {
+		$.ajax({
+			url,
+			type: 'POST',
+			data: form,
+			cache: false,
+			processData: false,
+			contentType: false,
+			dataType: 'json',
+			success: (response) => {
+				console.log(response);
+			}
 		})
 	}
+
+	function toggleVersionForm() {
+		let formElement = $('#document-version-form-container');
+		formElement.toggleClass('hidden');
+		if (formElement.hasClass('hidden')) {
+			formElement.css("display", "none")
+		} else {
+			formElement.css("display", "")
+		}
+	}
+
+	function renderComment(data) {
+		$("#comment-list").html("");
+		let ul = $('<ul>');
+		data.forEach(function (item, index) {
+			let elem = `
+			<li id="comment-${index}" style="margin:0 0 20px 0">
+					<div class="section">
+						<img class='circle responsive-img left' src="https://ui-avatars.com/api/?name=${item.sender}" style="margin:0 10px 0 0">
+						<b>${item.sender}</b><span class="grey-text"> ${item.datePost}</span>
+						<p>${item.comment}</p>
+						</div>
+						</li>`
+			ul.append(elem);
+		});
+		$("#comment-list").append(ul);
+	}
+
+	function initComment({ documentId }) {
+		$.get(`/x/document-comments?id=${$('#content > div:nth-child(1)').attr('id')}`, (data) => {
+			renderComment(data);
+		})
+	}
+
+	initComment({ documentId: $('#content > div:nth-child(1)').attr('id') })
+	$("#comment-form").submit(event => {
+		event.preventDefault()
+		let url = event.target.attributes.action.value;
+		sendComment({ url })
+	});
+
+	$("#version-form").submit(event => {
+		event.preventDefault();
+		let form = new FormData(event.target);
+		let url = event.target.attributes.action.value;
+		submitNewVersion({ form, url });
+	});
 </script>

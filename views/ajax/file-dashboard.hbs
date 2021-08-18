@@ -26,7 +26,7 @@
 	{{#if documents}}
 	<ul class="collection">
 		{{#each documents}}
-		<li id="{{this._id}}" class="collection-item document-content">{{this.name}}</li>
+		<li id="{{this.documentId}}" class="collection-item document-content">{{this.name}}</li>
 		{{/each}}
 	</ul>
 	{{else}}
@@ -67,7 +67,7 @@
 <script type="text/javascript">
 	$("#add-document").click(() => {
 		let workspacename = $(".brand-logo>a").text();
-		$.post("http://localhost/x/new-document",{
+		$.post("http://localhost/x/new-document", {
 			workspacename
 		}, function (data, status) {
 			$("#content").html(data);
@@ -81,7 +81,8 @@
 			id: docId,
 			workspacename: workspacename,
 		}, function (data, status) {
-			window.history.pushState({ "html": "something", "pageTitle": "file saya" }, "", "http://localhost/" + workspacename + "/#file-id=" + docId);
+			window.location.hash = `#file-id=${docId}`;
+			window.history.replaceState({ state: window.location.hash }, "", window.location.hash);
 			$("#content").html(data);
 		});
 	})

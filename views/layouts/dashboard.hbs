@@ -65,11 +65,15 @@
 <body class="{{webconf.color.background}}">
   {{{body}}}
   <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+  <script src="/js/cloud-storage/google.js"></script>
+  <script type="text/javascript" src="https://apis.google.com/js/api.js"></script>
   <script>
-    let username = '{{data.username}}';
-    let socket = io(`http://localhost:8080`, {
+    let username = '{{data.curuser.username}}';
+    let workspace = '{{data.workspace.name}}'
+    let socket = io(`http://localhost:8080/{{data.workspace.name}}`, {
       query: {
         'username': username,
+        'workspace': workspace,
       }
     });
   </script>

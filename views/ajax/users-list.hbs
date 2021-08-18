@@ -1,0 +1,17 @@
+<div class="card">
+    <div class="card-content">
+        <span class="card-title">Friends</span>
+        <p>Contributor</p>
+    </div>
+    <ul class="collection flush">
+        {{#each data.users}}
+        <li class="collection-item avatar chat-users" data-username="{{this.username}}">
+            <div class="badged-circle {{#if this.online}} online {{/if}}">
+                <img class="circle" src="https://ui-avatars.com/api/?name={{this.username}}" alt="avatar">
+            </div>
+            <span class="title">{{this.username}}</span>
+            <p class="truncate"><span class="badge"></span><span class="message">lorem</span></p>
+        </li>
+        {{/each}}
+    </ul>
+</div>

@@ -1,6 +1,6 @@
 <nav class="{{webconf.color.primary}}">
 	<div class="nav-wrapper">
-		<div class="brand-logo left" id="{{data.workspace._id}}" onclick="fileDashboard()" href="">
+		<div class="brand-logo left" id="{{data.workspace._id}}" onclick="fileDashboard()" href="" style="margin: 5px">
 			<a href="#">{{data.workspace.name}}</a>
 		</div>
 		<ul class="right">
@@ -21,7 +21,25 @@
 </ul>
 
 <div class="row">
-	<div id="content" class="col l9">
+	<div id="content" class="col l9"></div>
+	<div id="users-list" class="col l3">
+		<div class="card">
+			<div class="card-content">
+				<span class="card-title">Friends</span>
+				<p>Contributor</p>
+			</div>
+			<ul class="collection flush">
+				{{#each data.users}}
+				<li class="collection-item avatar chat-users" data-username="{{this.username}}">
+					<div class="badged-circle {{#if this.online}} online {{/if}}">
+						<img class="circle" src="https://ui-avatars.com/api/?name={{this.username}}" alt="avatar">
+					</div>
+					<span class="title">{{this.username}}</span>
+					<p class="truncate"><span class="badge"></span><span class="message">lorem</span></p>
+				</li>
+				{{/each}}
+			</ul>
+		</div>
 	</div>
 </div>
 
@@ -91,6 +109,13 @@
 </div>
 -->
 <script type="text/javascript">
+	let workspaceName = document.title;
+	const hashLocation = {
+		'#live-chat': () => liveChat(),
+		'#settings': () => setting(),
+		'#new-document': () => newDocument(),
+	}
+
 	function setting() {
 		$("#content").html('<h1>Coming Soon</h1>');
 	}
@@ -107,7 +132,7 @@
 	function newDocument() {
 		$.post("/x/new-document", {
 			ObjectId: $(".brand-logo").attr("id"),
-			workspacename: $(".brand-logo").text()
+			workspacename: $(".brand-logo>a").text()
 		}, function (data, status) {
 			$("#content").html(data);
 			M.Sidenav.getInstance(document.getElementById('slide-file')).close();
@@ -124,12 +149,23 @@
 		});
 	}
 
+	function documentDetail(id) {
+		$.post("http://localhost/x/document-details", {
+			id: id,
+			workspacename: $(".brand-logo>a").text(),
+		}, function (data, status) {
+			window.location.hash = `#file-id=${id}`;
+			window.history.replaceState({ state: window.location.hash }, "", window.location.hash);
+			$("#content").html(data);
+		});
+	}
+
 	window.onpopstate = function (event) {
-		console.log(JSON.stringify(event.state));
+		//console.log(JSON.stringify(event.state));
 	}
 
 	window.onhashchange = function () {
-		console.log("hey " + location.hash)
+		//console.log("hey " + location.hash)
 		window.history.replaceState({ state: window.location.hash }, "", window.location.hash);
 		if (location.hash === '#live-chat') {
 			liveChat();
@@ -138,8 +174,9 @@
 		} else if (location.hash === '#new-document') {
 			newDocument();
 		} else if (location.hash.match(/#file-id=\w+/)) {
-			$("#content").html('fsdfdf');
+			documentDetail(location.hash.replace('#file-id=', ''))
 		} else {
+			document.title = workspaceName;
 			fileDashboard();
 		}
 	}
@@ -167,7 +204,7 @@
 			} else if (location.hash === '#new-document') {
 				newDocument();
 			} else if (location.hash.match(/#file-id=\w+/)) {
-				$("#content").html('fsdfdf');
+				documentDetail(location.hash.replace('#file-id=', ''))
 			} else {
 				fileDashboard();
 			}
@@ -180,5 +217,95 @@
 				$("#content").html(data);
 			});
 		}
+
+		function userListItem({ username }) {
+			return `<li class="collection-item avatar chat-users" data-username="{{username}}">
+					<div class="badged-circle online">
+						<img class="circle" src="https://ui-avatars.com/api/?name={{username}}" alt="avatar">
+					</div>
+					<span class="title">{{username}}</span>
+					<p class="truncate"><span class="badge"></span><span class="message">lorem</span></p>
+				</li>`
+		}
+
+		function renderUserList() {
+			//TODO: render user list
+
+		}
+
+		function renderSendChat() {
+			let chatText = `<div class="chat-message right">
+            <img class="circle"
+              src="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/portrait2.jpg?v=15342908036415923195" alt="avatar">
+            ${message}
+          </div>`;
+			$('.chat-message:last-child').after(chatText)
+			$('.chat-container').scrollTop(document.querySelector('.chat-container').scrollHeight - document.querySelector('.chat-container').clientHeight)
+		}
+
+		function renderReceiveChat() {
+			let chatText = `<div class="chat-message left">
+            <img class="circle"
+              src="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/portrait2.jpg?v=15342908036415923195" alt="avatar">
+            ${message}
+          </div>`;
+			$('.chat-message:last-child').after(chatText)
+			$('.chat-container').scrollTop(document.querySelector('.chat-container').scrollHeight - document.querySelector('.chat-container').clientHeight)
+		}
+
+		function getChats() {
+			$.post("http://localhost/x/pull-chats",
+				{
+					username: sender,
+					workspacename: workspace,
+					receiver: receiver,
+				}, (data) => {
+					renderChats(data, sender);
+				});
+		}
+
+		function renderChats() {
+			$('.chat-wrapper').html('<div class="chat-message"></div>');
+			data.forEach(item => {
+				if (item.chat.sender === username) {
+					renderSendChat(item.chat.message);
+				} else {
+					renderReceiveChat(item.chat.message)
+				}
+			});
+			$('.chat-message:first-child').remove();
+		}
+
+
+		socket.on('who-online', ({ username, init }) => {
+			console.log(username);
+			$(`.chat-users[data-username="${username}"]>.badged-circle`).addClass('online');
+			socket.emit('im-online', { username: $('#dropdown1>li:first-child').text(), init });
+		});
+		socket.on('leaving', username => {
+			$(`.chat-users[data-username="${username}"]>.badged-circle`).removeClass('online');
+		})
+		socket.on('someone-ask-private-chat', msg => {
+			if (msg.dest === username) {
+				socket.emit('receive-private-chat', msg);
+			}
+		});
+		socket.on('receive-private-chat', msg => {
+			if (msg.dest === $('#chat-username').text())
+				$('button').val(msg.destId);
+		});
+		socket.on('private-chat', (msg, sender) => {
+			if (sender === $('#chat-username').text()) {
+				renderReceiveChat(msg);
+				$('.avatar[data-username="dudung"]>p>.message').text(msg)
+			} else {
+				let counter = $(`.avatar[data-username="${sender}"]>p>.badge`).text();
+				counter++
+				$(`.avatar[data-username="${sender}"]>p>.badge`).addClass('new');
+				$(`.avatar[data-username="${sender}"]>p>.badge`).text(counter);
+				$(`.avatar[data-username="${sender}"]>p>.message`).text(msg)
+			}
+		});
+		socket.emit('im-online', { sender: $('#dropdown1>li:first-child').text(), init: 3 });
 	});
 </script>

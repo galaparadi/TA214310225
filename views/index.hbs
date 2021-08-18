@@ -47,6 +47,11 @@
 					error.innerHTML = `<i>${document.cookie}</i>`;
 				}
 				M.Modal.getInstance(modal).open();
+				//TODO: unset cookie after using it
 		}
 	});
+
+	function getCookie(cookies){
+		return cookies.split(';').map(item => {return {key: item.split('=')[0], value: item.split('=')[1]}})
+	}
 </script>

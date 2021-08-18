@@ -88,7 +88,7 @@ limitations under the License.
     function pickerCallback(data) {
       if (data.action == google.picker.Action.PICKED) {
         var fileId = data.docs[0].id;
-        console.log(data.docs)
+        console.dir(data.docs)
         alert('The user selected: ' + fileId);
         document.getElementById('result').innerHTML = fileId;
       }
