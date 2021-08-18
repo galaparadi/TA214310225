@@ -3,13 +3,61 @@ const Workspace = require('../models/workspace-model');
 const dataSource = require('../datasource/datasource');
 const HomeController = require('../controller/home');
 const WorkspaceController = require('../controller/workspace');
+const AjaxController = require('../controller/ajax')
 var express = require('express');
 var router = express.Router();
 const reqAPI = require('../lib/requestAPI');
+const { authorize } = require('passport');
 
 // ====================================this block not valid==================================
 
 // =======================================END of BLock=======================================
+router.use((req, res, next) => req.user ? next() : res.status(401).send('not authorize'));
+
+router.get("/user-list", async (req, res, next) => {
+	// let users = await dataSource.Workspaces({}).getUsers();
+	res.render('ajax/user-list', { layout: false })
+})
+
+router.get("/document-versions", async (req, res) => {
+	try {
+		let { documentId, workspaceName: name } = req.query;
+		let versions = await dataSource.Workspaces({ name }).getDocumentVersions({ documentId })
+		res.send({ documentId })
+	} catch (error) {
+		res.send({ status: 0, message: error.message })
+	}
+})
+
+/**
+ * body = { comment-input, document-id, workspace }
+ */
+router.post("/document-comments", async (req, res) => {
+	try {
+		let { comment, workspace, documentId } = req.body;
+		let author = req.user.username;
+		let commentObject = { comment, documentId, workspace, author };
+		console.log(commentObject);
+		// await dataSource.Workspaces().addComments(commentObject);
+		res.send({ status: 1 });
+	} catch (error) {
+		debugger;
+		res.send({ status: 0, message: error.message });
+	}
+});
+
+router.get('/document-comments', async (req, res) => {
+	try {
+		let { workspace, id: documentId } = req.query;
+		let { data } = await dataSource.Workspaces().getComments({ documentId });
+		res.send(data);
+	} catch (error) {
+		console.log(error);
+		res.send({ status: 0, message: error.message });
+	}
+})
+
+
 router.post("/pull-chats", async (req, res, next) => {
 	const { data: chats } = await dataSource.Workspaces().getChats({
 		username: req.body.username,
@@ -32,41 +80,13 @@ router.post("/user-settings",
 		res.render('ajax/user-settings.hbs', { layout: false });
 	})
 
-router.post("/document-details", async function (req, res, next) {
-	try {
-		let data = (await dataSource
-			.Workspaces()
-			.getDocument({
-				name: req.body.workspacename,
-				id: req.body.id
-			}))
-			.data;
-		console.log(data);
-		let workspace = req.body.workspacename
-		res.render("ajax/document-detail", { name: workspace, document: data, layout: false })
-		return true;
-	} catch (err) {
-		next(err);
-		console.log(err);
-		return false;
-	}
-})
+router.post("/document-details", AjaxController.documentDetail)
+router.post("/file-dashboard", AjaxController.fileDashboard)
 
 router.post("/new-document", function (req, res) {
 	res.render("ajax/new-document-form", { workspacename: req.body.workspacename, layout: false });
 });
 
-router.post("/file-dashboard", async function (req, res, next) {
-	try {
-		let documents = (await dataSource.Workspaces().getDocuments({ name: req.body.workspacename })).data;
-		res.render("ajax/file-dashboard", { documents, layout: false })
-		return true;
-	} catch (err) {
-		console.log(err);
-		res.send("error sending data")
-		return false;
-	}
-})
 
 router.post("/document-tree", function (req, res, next) {
 	res.render("ajax/new-category", { workspacename: req.body.workspacename, layout: false })

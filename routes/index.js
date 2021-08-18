@@ -4,6 +4,7 @@ var HomeController = require('../controller/home');
 
 router.get('/',
   HomeController.isLogin,
+  HomeController.setNotifications,
   HomeController.render
 );
 

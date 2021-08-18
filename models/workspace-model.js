@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const WorkspaceUser = require('./workspaceuser-model');
 const Document = require('./document-model');
-const Notification = require('./notification-model');
 const Filetree = require('./category-model');
 
 const Schema = mongoose.Schema;

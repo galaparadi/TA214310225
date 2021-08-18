@@ -1,24 +1,31 @@
-let username = $('.username-link').attr('id');
-let socket = io(`http://localhost:4000`, {
-    query: {
-        'username': username
-    },
-    auth: {
-        username
-    }
-});
+// let username = $('.username-link').attr('id');
+// let socket = io(`http://localhost:4000`, {
+//     query: {
+//         'username': username
+//     },
+//     auth: {
+//         username
+//     }
+// });
 
-socket.on('notification', data => {
-    console.log('getting notif....')
-    pushNotif(data);
-});
+// socket.on('notification', data => {
+//     console.log('getting notif....')
+//     pushNotif(data);
+// });
 
 let pushNotif = (data) => {
-    renderNotifItem(data);
+	renderNotifItem(data);
+}
+
+let submitNotif = (notifId, username) => {
+	// alert(`i'm submitted by ${param}`)
+	$.post(`/u/${username}/notif`, { notifId }, function (data) {
+		// alert('confirm submit');
+	})
 }
 
 let renderNotifItem = ({ message, workspace }) => {
-    let notifItemTemplate = `<div class="card-panel">
+	let notifItemTemplate = `<div class="card-panel">
 				<div class="row" style="margin-bottom: 5px">
 					<div class="col l9 s9 valign-wrapper">
 						<p style="margin-top: 0px"><b><a href="/${workspace}"
@@ -36,16 +43,16 @@ let renderNotifItem = ({ message, workspace }) => {
 			</div>`;
 
 
-    if ($('#notif-wrapper>.card-panel').length) {
-        $('#notif-wrapper>.card-panel:first').before(notifItemTemplate);
-    } else {
-        $('#notif-wrapper').html(notifItemTemplate);
-    }
+	if ($('#notif-wrapper>.card-panel').length) {
+		$('#notif-wrapper>.card-panel:first').before(notifItemTemplate);
+	} else {
+		$('#notif-wrapper').html(notifItemTemplate);
+	}
 }
 
 let changeContentItem = ({ hash, body }) => {
-    if (hash.replace('#', ''))
-        $.post(`/x/${hash}`, body, (data, status) => $('.container').html(data));
+	if (hash.replace('#', ''))
+		$.post(`/x/${hash.replace('#', '')}`, body, (data, status) => $('.container').html(data));
 }
 
 changeContentItem({ hash: location.hash });

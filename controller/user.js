@@ -9,7 +9,7 @@ exports.localLogin = (req, res, next) => {
     }
     if (!user) {
       console.log(info);
-      res.cookie('error', info.status, {expires : new Date(Date.now() + 1000)})
+      res.cookie('error', info.status, { expires: new Date(Date.now() + 10) })
       return res.redirect('/');
     }
     req.logIn(user, function (err) {
@@ -21,19 +21,29 @@ exports.localLogin = (req, res, next) => {
   })(req, res, next);
 }
 
+exports.getNotifications = async (req, res, next) => {
+  try {
+    let { username: name } = req.user;
+    let { notifications } = await userDataSource.getNotifications({ name })
+    res.send(notifications.map(({ content }) => ({ ...content })));
+  } catch (error) {
+    next(error);
+  }
+}
+
+exports.confirmNotif = async (req, res, next) => {
+  try {
+    let { notifId,  } = req.body;
+    let { username } = req.params
+    let response = await userDataSource.confirmNotif({ notifId, username });
+    res.send({ sukses: 1, response })
+  } catch (error) {
+    next(error);
+  }
+}
+
 exports.joinWorkspace = async (req, res, next) => {
-  let { user } = await userDataSource.getUser({ username: req.user.username });
-  let { workspace } = await workspaceDataSource.getWorkspace({ name: req.body.name });
-  user.workspaces.push(workspace._id);
-  await userDataSource.updateUser({ user: user });
-  await workspaceDataSource.putUser({
-    workspace: req.body.name,
-    user: {
-      user: user._id,
-      level: 1,
-      disable: true,
-    }
-  });
+  await workspaceDataSource.joinWorkspace({ workspace: req.body.name, username: req.user.username });  
   next();
 }
 
@@ -43,17 +53,33 @@ exports.logout = async (req, res, next) => {
   res.redirect("/");
 }
 
+exports.googleRedirect2 = async (req,res,next) => {
+  console.log(req.query);
+  res.send(req.query);
+}
+
 exports.googleRedirect = async (req, res, next) => {
   passport.authenticate('google', (err, user, info) => {
+    if(!info) return next(err);
     if (info.registered) {
-      req.logIn(user, (err) => {
+      req.login(user, async (err) => {
+        return res.redirect('/')
+      })
+    } else {
+      req.logIn(user, async (err) => {
+        await userDataSource.addUser({ user: user.user });
         return res.redirect('/')
       });
-    } else {
-      //redirect to information update before register
-      res.cookie('googleUser', user);
-      return res.render('profile/register-google', { data: user });
     }
+    // if (info.registered) {
+    //   req.logIn(user, (err) => {
+    //     return res.redirect('/')
+    //   });
+    // } else {
+    //   //redirect to information update before register
+    //   res.cookie('googleUser', user);
+    //   return res.render('profile/register-google', { data: user });
+    // }
   })(req, res, next);
 }
 
@@ -62,7 +88,7 @@ exports.render = (req, res, next) => {
 }
 
 exports.redirect = (req, res, next) => {
-  
+
 }
 
 exports.showProfile = async (req, res, next) => {
@@ -90,10 +116,10 @@ exports.register = async (req, res, next) => {
 
   if (req.cookies.googleUser) {
     userDocument = {
-      username: req.cookies.googleUser.username,
-      email: req.cookies.googleUser.email,
-      password: req.cookies.googleUser.password,
-      googleId: req.cookies.googleUser.googleId,
+      username: req.cookies.googleUser.user.username,
+      email: req.cookies.googleUser.user.email,
+      password: req.cookies.googleUser.user.password,
+      googleId: req.cookies.googleUser.user.googleId,
       googleAccount: true
     }
     res.clearCookie('googleUser');
@@ -110,12 +136,13 @@ exports.register = async (req, res, next) => {
     let { user, message } = await userDataSource.addUser({ user: userDocument });
     if (!user) {
       if (message.includes('duplicate')) {
-        res.render('profile/register', {error: {valid: 'invalid', status: 0,message: 'user sudah terdaftar'},userDocument}) // handle if duplicate
+        res.render('profile/register', { error: { valid: 'invalid', status: 0, message: 'user sudah terdaftar' }, userDocument }) // handle if duplicate
       } else {
-        res.redirect('/') // general error
+        // res.redirect('/') // general error
+        next(err);
       }
     } else {
-      req.logIn(user, function (error) {
+      req.logIn({ user }, function (error) {
         if (error) {
           return next(error);
         };

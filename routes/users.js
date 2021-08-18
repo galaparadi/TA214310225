@@ -4,24 +4,17 @@ var router = express.Router();
 const UserController = require('../controller/user');
 const { fileList } = require('../lib/googledrive');
 
-router.get('/', function (req, res) {
-  res.redirect("/");
-});
+router.get('/', (req, res) => res.redirect("/"))
 
-router.post('/dojoin', UserController.joinWorkspace, function (req, res) {
-  //TODO 
-  res.redirect('/?join=join workspace sukses');
-})
+  .post('/dojoin',
+    UserController.joinWorkspace,
+    (req, res) => res.redirect('/'))
 
-router.get('/join', UserController.render);
-
-router.get('/register', UserController.render);
-
-router.post('/register', UserController.register);
-
-router.get('/register-google', UserController.render);
-
-router.post('/doregister', UserController.register);
+  .get('/join', UserController.render)
+  .get('/register', UserController.render)
+  .post('/register', UserController.register)
+  .get('/register-google', UserController.render)
+  .post('/doregister', UserController.register);
 
 // ============CUSTOM LOCAL LOGIN AUTHENTICATION===========
 router.post('/auth/login', UserController.localLogin);
@@ -29,14 +22,7 @@ router.post('/auth/login', UserController.localLogin);
 // auth logout
 router.get('/auth/logout', UserController.logout);
 
-router.get('/auth/gdrive', passport.authenticate('google-drive', { scope: ['https://www.googleapis.com/auth/drive.metadata.readonly'] }))
-router.get('/auth/gdrive/redirect', passport.authenticate('google-drive', { session: false }), async (req, res) => {
-  let data = await fileList(req.user.accessToken);
-  console.log(data);
-  res.redirect('/')
-});
-
-router.get('/auth/google/redirect', UserController.googleRedirect);
+router.get('/auth/google/redirect', UserController.googleRedirect2);
 
 router.get('/auth/google', passport.authenticate('google', {
   scope: ['profile', 'email', 'https://www.googleapis.com/auth/drive.file'],
@@ -44,6 +30,9 @@ router.get('/auth/google', passport.authenticate('google', {
   approvalPrompt: 'force'
 }));
 
+router.get('/:username/notif',UserController.getNotifications)
+
+router.post('/:username/notif', UserController.confirmNotif)
 
 
 module.exports = router;

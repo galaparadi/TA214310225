@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Notification = require('./notification-model');
 const Schema = mongoose.Schema;
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
@@ -11,7 +10,6 @@ const userSchema = new Schema({
     email: String,
     googleAccount: Boolean,
     workspaces: [{type: Schema.Types.ObjectId, ref: 'workspace'}],
-    notifications: [Schema.Types.ObjectId]
 });
 
 userSchema.methods.getWorkspaces = function () {
@@ -32,19 +30,7 @@ userSchema.methods.deleteWorkspaces = function(workspace,cb) {
 	cb();
 }
 
-userSchema.methods.addNotification = function (data) {
-	var notif = this.notifications;
-	notif.push(new Notification(data));
-	this.save(function(err, user) {
-		if (err) {
-			return err;
-		}
-	});	
-}
 
-userSchema.methods.updateNotification = function(argument) {
-
-}
 
 userSchema.statics.isExist = function (name, cb) {
 	return this.findOne({username: name}, cb)
