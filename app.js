@@ -25,49 +25,51 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // set up session cookies
 app.use(cookieSession({
-    maxAge: 24 * 60 * 60 * 1000,
-    keys: [keys.session.cookieKey]
+  maxAge: 24 * 60 * 60 * 1000,
+  keys: [keys.session.cookieKey]
 }));
 
 // initialize passport
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect(keys.mongodb.dbURI, {useNewUrlParser: true, useCreateIndex : true, useUnifiedTopology : true}, () => {
-    console.log('\x1b[33m%s\x1b[0m', 'connected to mongodb');
+mongoose.connect(keys.mongodb.dbURI, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }, () => {
+  console.log('\x1b[33m%s\x1b[0m', 'connected to mongodb');
 });
 
-app.use(function(req,res,next){
+app.use(function (req, res, next) {
   res.locals.webconf = webconf;
   next();
 });
 
-app.use((req,res,next) => { //log session
+app.use((req, res, next) => { //log session
   // res.cookie("nama", "dudung",{httpOnly: true})
   // console.log({user: req.user,cookie: req.session});
   next();
 });
 
 app.use('/x', require('./routes/ajax.js'));
+app.use('/test', require('./routes/test'));
 app.use('/file', require('./routes/file.js'));
 app.use('/auth', require('./routes/auth.js'));
 app.use('/u', require('./routes/users.js'));
 app.use('/w', require('./routes/workspace.js'));
 app.use('/p', require('./routes/profile.js'));
-app.use('/test',require('./routes/test'));
-app.use('/drive',(req,res) => {
-  res.render('drive',{layout:false})
+app.use('/cloud', (req, res) => {
+  res.render('drive', { layout: false })
 });
+app.use('/feed', require('./routes/feed.js'));
+app.use('/notif', require('./routes/notif.js'))
 app.use('/:workspace', require('./routes/workspace-page.js'))
-app.use('/', require('./routes/index.js'));                 
+app.use('/', require('./routes/index.js'));
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   //console.log('error catched');
   res.locals.message = err.message;
@@ -75,7 +77,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error', {layout: 'layouts/error'});
+  res.render('error', { layout: 'layouts/error' });
 });
 
 module.exports = app;

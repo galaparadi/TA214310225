@@ -4,10 +4,11 @@ module.exports = {
         google: {
             clientID: '1031394987005-jan8sh88i4poiv7o4kuhmlehdft8ou31.apps.googleusercontent.com',
             clientSecret: '-LruvOxju0SFmtAlI7HlPhzm',
-            projectNumber : '1031394987005'
+            projectNumber : '1031394987005',
+            developerKey : 'AIzaSyAUnbZJLU_uR3J9oCA--_lCrMUAGC_UD74',
         },
         mongodb: {
-            dbURI: 'mongodb://localhost/oauth-test'
+            dbURI: 'mongodb://dev:dev@localhost/dochub'
         },
         session: {
             cookieKey: 'illbeback'
