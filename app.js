@@ -49,7 +49,7 @@ app.use((req, res, next) => { //log session
 });
 
 app.use('/x', require('./routes/ajax.js'));
-app.use('/test', require('./routes/test'));
+app.use('/test', require('./routes/test.js'));
 app.use('/file', require('./routes/file.js'));
 app.use('/auth', require('./routes/auth.js'));
 app.use('/u', require('./routes/users.js'));

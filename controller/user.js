@@ -53,11 +53,6 @@ exports.logout = async (req, res, next) => {
   res.redirect("/");
 }
 
-exports.googleRedirect2 = async (req,res,next) => {
-  console.log(req.query);
-  res.send(req.query);
-}
-
 exports.googleRedirect = async (req, res, next) => {
   passport.authenticate('google', (err, user, info) => {
     if(!info) return next(err);
@@ -71,15 +66,6 @@ exports.googleRedirect = async (req, res, next) => {
         return res.redirect('/')
       });
     }
-    // if (info.registered) {
-    //   req.logIn(user, (err) => {
-    //     return res.redirect('/')
-    //   });
-    // } else {
-    //   //redirect to information update before register
-    //   res.cookie('googleUser', user);
-    //   return res.render('profile/register-google', { data: user });
-    // }
   })(req, res, next);
 }
 

@@ -22,7 +22,7 @@ router.post('/auth/login', UserController.localLogin);
 // auth logout
 router.get('/auth/logout', UserController.logout);
 
-router.get('/auth/google/redirect', UserController.googleRedirect2);
+router.get('/auth/google/redirect', UserController.googleRedirect);
 
 router.get('/auth/google', passport.authenticate('google', {
   scope: ['profile', 'email', 'https://www.googleapis.com/auth/drive.file'],
