@@ -150,6 +150,7 @@ exports.render = function (req, res) {
     if (registered) {
       path = 'dashboard';
     }
+    res.locals.data.users = res.locals.data.users.filter(user => user.username !== req.user.username)
     res.render(path, { layout: 'layouts/dashboard' });
   } else {
     //TODO: make workspace not found page
