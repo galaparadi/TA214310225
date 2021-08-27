@@ -9,7 +9,7 @@ exports.documentDetail = async (req, res, next) => {
             document: {
                 _id: data.documentId._id,
                 name: data.name,
-                author: data.creator,
+                author: data.author,
                 version: data.documentId.version,
                 currentVersion: String(data.documentId.version.length)
             },
