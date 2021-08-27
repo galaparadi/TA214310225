@@ -132,7 +132,8 @@
 	function newDocument() {
 		$.post("/x/new-document", {
 			ObjectId: $(".brand-logo").attr("id"),
-			workspacename: $(".brand-logo>a").text()
+			workspacename: $(".brand-logo>a").text(),
+			authorLevel: document.body.dataset.level,
 		}, function (data, status) {
 			$("#content").html(data);
 			M.Sidenav.getInstance(document.getElementById('slide-file')).close();
