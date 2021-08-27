@@ -20,11 +20,13 @@ exports.addDocumentVersion = async (req, res, next) => {
     const Workspace = require('../datasource/datasource').Workspaces({ name });
     let { docid } = req.params;
     let form = new FormData();
+    // form.append('user-level', req.body['user-level']);
     form.append('workspace', name);
     form.append('author', req.user.username);
     form.append('filename', req.body['file-name']);
     form.append('documentId', req.body['document-id']);
     form.append('file', req.file.buffer, req.body['file-name']);
+    form.append('note', req.body['version-note']);
     await Workspace.addDocumentVersion({ form, workspace: name, documentId: docid });
     res.send({ status: 1 })
   } catch (error) {
@@ -73,7 +75,7 @@ exports.addWorkspace = async (req, res, next) => {
     await UserDatasource.updateUser({ user: user, username: req.user.username });
     res.cookie('setting', {
       register: true,
-    }, { expires: new Date(Date.now() + 60) });
+    }, { expires: new Date(Date.now() + 1000) });
     res.redirect('/');
   } catch (error) {
     next(error);
@@ -150,6 +152,7 @@ exports.render = function (req, res) {
     if (registered) {
       path = 'dashboard';
     }
+    res.locals.data.curuser = res.locals.data.users.find(user => user.username === req.user.username)
     res.locals.data.users = res.locals.data.users.filter(user => user.username !== req.user.username)
     res.render(path, { layout: 'layouts/dashboard' });
   } else {
