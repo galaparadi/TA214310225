@@ -28,12 +28,12 @@ router.get('/download/:workspace/:name', async (req, res, next) => {
 router.post('/upload', upload.single('document'), async (req, res, next) => {
 	let form = new FormData();
 	form.append('workspace', req.body.workspace);
-	form.append('filename', req.body['file-name']);
+	form.append('filename', req.body['filename']);
 	form.append('author', req.user._id);
 	form.append('file', req.file.buffer, req.body['file-name']);
-
+	form.append('author-level', req.body['author-level'])
 	try {
-		let data = (await WorkspaceDatasource.addDocument({ form, workspace: req.body.workspace })).data;
+		let data = (await WorkspaceDatasource.addDocument({ form, workspace: req.body.workspace, authorLevel: req.body['author-level'] })).data;
 		res.redirect(`/${req.body.workspace}`);
 	} catch (error) {
 		console.log(error);

@@ -21,7 +21,7 @@ class Workspace {
         }
     }
 
-    async addUser({}){
+    async addUser({ }) {
         try {
             let response = await axios.post(`${this._base_url}/workspaces/${workspace}/users`, workspace, {
                 headers: {
@@ -131,14 +131,26 @@ class Workspace {
         }
     }
 
-    async addDocument({ form, workspace }) {
+    async addDocument({ form, workspace, authorLevel }) {
         try {
-            let response = await axios.post(`http://localhost:4000/workspaces/${workspace}/documents`, form, {
-                headers: form.getHeaders()
-            })
-            return response.data;
+            //TODO: handle if author is non-admin user
+            if (authorLevel == 0) {
+                let response = await axios.post(`http://localhost:4000/workspaces/${workspace}/documents`, form, {
+                    headers: form.getHeaders(),
+                    'maxContentLength': Infinity,
+                    'maxBodyLength': Infinity,
+                })
+                return response.data;
+            } else {
+                let response = await axios.post(`http://localhost:4000/workspaces/${workspace}/documents/submit`, form, {
+                    headers: form.getHeaders(),
+                    'maxContentLength': Infinity,
+                    'maxBodyLength': Infinity,
+                })
+                return response.data;
+            }
         } catch (error) {
-            console.log(error.message);
+            console.log('\x1b[31m%s\x1b[0m', error.message);
             return { error }
         }
     }
