@@ -6,6 +6,28 @@
 			<input type="hidden" name="workspace" value="{{workspacename}}">
 			<input type="hidden" name="drive-id" value="">
 			<input type="hidden" name="author-level" value="{{author.level}}">
+			<input type="hidden" name="access-token" value="">
+			<input type="hidden" name="refresh-token" value="">
+			<input type="hidden" name="mime-type" value="">
+			<div id="dropboxContainer"></div>
+			{{!--
+			TODO: rapikan pemilihat metode upload
+			--}}
+			<div class="file-field input-field">
+				<div class="btn">
+					<span>File</span>
+					<input type="file" name="document">
+				</div>
+				<div class="file-path-wrapper">
+					<input class="file-path validate" type="text" name="file-name">
+				</div>
+			</div>
+			<div class="btn" onclick="loadPicker()">
+				Google Drive
+			</div>
+			<div class="btn" onclick="loadDropboxPicker()">
+				Dropbox
+			</div>
 			<div class="row">
 				<div class="col s12 input-field">
 					<input type="text" name="filename">
@@ -18,18 +40,8 @@
 					<label for="level">level</label>
 				</div>
 			</div>
-			<div class="btn" onclick="loadPicker()">
-				Google Drive
-			</div>
-			<div class="file-field input-field">
-				<div class="btn">
-					<span>File</span>
-					<input type="file" name="document">
-				</div>
-				<div class="file-path-wrapper">
-					<input class="file-path validate" type="text" name="file-name">
-				</div>
-			</div>
+
+
 			<button class="btn waves-effect waves-light" type="submit" name="action">Submit
 				<i class="material-icons right">send</i>
 			</button>
