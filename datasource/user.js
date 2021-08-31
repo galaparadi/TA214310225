@@ -84,10 +84,6 @@ class User {
 
     async confirmNotif({ notifId }) {
         try {
-            /*
-                1. cek notifikasi type
-                2. eksekusi notif berdasarkan action
-            */
             let { data } = await axios.put(`${this._base_url}/notif/${notifId}/action`, {}, {
                 headers: {
                     'Authorization': `Bearer ${this._access_token}`
@@ -118,7 +114,8 @@ class User {
             let response = await axios.get(`${this._base_url}/users/${name}/feeds`);
             return response.data;
         } catch (error) {
-            console.log(error);
+            console.log(error.message);
+            return {}
         }
     }
 

@@ -124,7 +124,9 @@ exports.setNotifications = async function (req, res, next) {
 }
 
 exports.setFeeds = async function (req, res, next) {
-
+  let { feeds } = await WorkspaceDatasource.getFeeds({ workspace: req.params.workspace });
+  res.locals.data = { ...res.locals.data, feeds }
+  next();
 }
 
 exports.setWorkspaceData = async function (req, res, next) {
