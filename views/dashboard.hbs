@@ -109,6 +109,22 @@
 </div>
 -->
 <script type="text/javascript">
+
+
+	let cookies = document.cookie.split(';').reduce((obj, cookie) => {
+		let [key, value] = cookie.split('=');
+		let newObj = {};
+		newObj[key] = decodeURI(value);
+		return { ...obj, ...newObj }
+	}, {})
+
+	if (cookies.errAddDocument) {
+		M.toast({ html: decodeURI(cookies.errAddDocument) })
+	}
+	if (cookies.addDocument) {
+		M.toast({ html: decodeURI(cookies.addDocument) })
+	}
+
 	let workspaceName = document.title;
 	const hashLocation = {
 		'#live-chat': () => liveChat(),
