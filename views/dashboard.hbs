@@ -132,6 +132,20 @@
 		'#new-document': () => newDocument(),
 	}
 
+	function loadDropboxPicker() {
+		options = {
+			success: function (files) {
+				console.log(files)
+			},
+			cancel: function () {
+
+			},
+		};
+		Dropbox.choose(options);
+		//let dropboxButton = Dropbox.createChooseButton(options);
+		//document.getElementById("dropboxContainer").appendChild(dropboxButton);
+	}
+
 	function setting() {
 		$("#content").html('<h1>Coming Soon</h1>');
 	}

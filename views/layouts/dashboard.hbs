@@ -62,11 +62,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
-<body class="{{webconf.color.background}}" data-username="{{data.curuser.username}}" data-workspace="{{data.workspace.name}}" data-level="{{data.curuser.level}}">
+<body class="{{webconf.color.background}}" data-username="{{data.curuser.username}}"
+  data-workspace="{{data.workspace.name}}" data-level="{{data.curuser.level}}">
   {{{body}}}
   <script src="http://localhost:8080/socket.io/socket.io.js"></script>
   <script src="/js/cloud-storage/google.js"></script>
   <script type="text/javascript" src="https://apis.google.com/js/api.js"></script>
+  <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs"
+    data-app-key="h33ulr7xxcdrbbt">
+    </script>
   <script>
     let username = '{{data.curuser.username}}';
     let workspace = '{{data.workspace.name}}';
