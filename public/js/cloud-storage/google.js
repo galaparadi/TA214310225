@@ -8,10 +8,16 @@ let clientId = "1031394987005-jan8sh88i4poiv7o4kuhmlehdft8ou31.apps.googleuserco
 let appId = "1031394987005";
 
 // Scope to use to access user's Drive items.
-let scope = ['https://www.googleapis.com/auth/drive.file'];
+let scope = [
+    'https://www.googleapis.com/auth/drive',
+    'https://www.googleapis.com/auth/drive.file',
+    'https://www.googleapis.com/auth/drive.readonly',
+];
 
 let pickerApiLoaded = false;
 let oauthToken;
+
+let objOfPicker = {}
 
 const googleDrive = {
 
@@ -35,13 +41,15 @@ function onAuthApiLoad() {
 
 function onPickerApiLoad() {
     pickerApiLoaded = true;
-    createPicker();
+    // createPicker();
 }
 
 function handleAuthResult(authResult) {
     console.log(authResult)
     if (authResult && !authResult.error) {
         oauthToken = authResult.access_token;
+        document.querySelector('form>input[name="access-token"]').value = authResult.access_token;
+        document.querySelector('input[name="refresh-token"]').value = authResult.refresh_token;
         createPicker();
     }
 }
@@ -50,18 +58,20 @@ function handleAuthResult(authResult) {
 function createPicker() {
     if (pickerApiLoaded && oauthToken) {
         let view = new google.picker.View(google.picker.ViewId.DOCS);
-        //view.setMimeTypes("image/png,image/jpeg,image/jpg");
+        view.setMimeTypes("application/vnd.google-apps.document,application/vnd.openxmlformats-officedocument.wordprocessingml.document");
         let picker = new google.picker.PickerBuilder()
             .enableFeature(google.picker.Feature.NAV_HIDDEN)
             .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+            .enableFeature(google.picker.Feature.MINE_ONLY)
             .setAppId(appId)
             .setOAuthToken(oauthToken)
             .addView(view)
-            .addView(new google.picker.DocsUploadView())
+            // .addView(new google.picker.DocsUploadView())
             .setDeveloperKey(developerKey)
             .setCallback(pickerCallback)
             .build();
         picker.setVisible(true);
+        objOfPicker = { view, picker }
     }
 }
 
@@ -73,5 +83,9 @@ function pickerCallback(data) {
         // alert('The user selected: ' + fileId);
         // document.getElementById('result').innerHTML = fileId;
         document.querySelector('form>input[name="drive-id"]').value = fileId;
+        document.querySelector('input[name="filename"]').value = data.docs[0].name;
+        document.querySelector('input[name="filename"]').focus();
+        document.querySelector('input[name="mime-type"]').value = data.docs[0].mimeType;
+        objOfPicker.picker.dispose()
     }
 }
