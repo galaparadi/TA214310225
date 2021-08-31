@@ -1,5 +1,6 @@
 const axios = require('axios');
 const userDataSource = require('../datasource/datasource').Users();
+const worksapceDatasource = require('../datasource/datasource').Workspaces({});
 
 exports.isLogin = async function (req, res, next) {
   try {
@@ -25,6 +26,18 @@ exports.setNotifications = async function (req, res, next) {
       let { notifications } = await userDataSource.getNotifications({ name: req.user.username });
       res.locals = { ...res.locals, notifications: notifications.filter(notification => !notification.statusRead).map(({ _id, content, statusRead }) => ({ _id, content, statusRead })) }
       res.locals.notifications = { items: res.locals.notifications, count: res.locals.notifications.length }
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+exports.setFeeds = async function (req, res, next) {
+  try {
+    if (req.user) {
+      let { feeds } = await userDataSource.getFeeds({ name: req.user.username });
+      res.locals = { ...res.locals, feeds }
     }
     next();
   } catch (error) {
