@@ -114,15 +114,15 @@
 	let cookies = document.cookie.split(';').reduce((obj, cookie) => {
 		let [key, value] = cookie.split('=');
 		let newObj = {};
-		newObj[key] = decodeURI(value);
+		newObj[key] = decodeURIComponent(value);
 		return { ...obj, ...newObj }
 	}, {})
 
 	if (cookies.errAddDocument) {
-		M.toast({ html: decodeURI(cookies.errAddDocument) })
+		M.toast({ html: cookies.errAddDocument })
 	}
 	if (cookies.addDocument) {
-		M.toast({ html: decodeURI(cookies.addDocument) })
+		M.toast({ html: cookies.addDocument })
 	}
 
 	let workspaceName = document.title;
@@ -132,18 +132,28 @@
 		'#new-document': () => newDocument(),
 	}
 
+	function loadFilePicker() {
+		document.querySelector('input[name="document"]').click();
+		document.querySelector('input[name="upload-method"]').value = 'file';
+	}
+
 	function loadDropboxPicker() {
 		options = {
 			success: function (files) {
 				console.log(files)
+				//document.querySelector('form>input[name="drive-id"]').value = fileId;
+				document.querySelector('input[name="filename"]').value = files[0].name;
+				document.querySelector('input[name="filename"]').focus();
+				document.querySelector('input[name="drive-id"]').value = files[0].id;
+				//document.querySelector('input[name="mime-type"]').value = data.docs[0].mimeType;
+				document.querySelector('input[name="upload-method"]').value = 'dropbox';
+				window.open("https://www.dropbox.com/oauth2/authorize?response_type=token&client_id=h33ulr7xxcdrbbt&redirect_uri=http://localhost/x/dropbox-auth", "hello", "width=450,lenght=700");
 			},
 			cancel: function () {
 
 			},
 		};
 		Dropbox.choose(options);
-		//let dropboxButton = Dropbox.createChooseButton(options);
-		//document.getElementById("dropboxContainer").appendChild(dropboxButton);
 	}
 
 	function setting() {
@@ -166,6 +176,8 @@
 			authorLevel: document.body.dataset.level,
 		}, function (data, status) {
 			$("#content").html(data);
+			var elems = document.querySelectorAll('.dropdown-file-trigger');
+			var instances = M.Dropdown.init(elems);
 			M.Sidenav.getInstance(document.getElementById('slide-file')).close();
 		});
 	}

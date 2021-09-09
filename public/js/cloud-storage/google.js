@@ -86,6 +86,7 @@ function pickerCallback(data) {
         document.querySelector('input[name="filename"]').value = data.docs[0].name;
         document.querySelector('input[name="filename"]').focus();
         document.querySelector('input[name="mime-type"]').value = data.docs[0].mimeType;
+        document.querySelector('input[name="upload-method"]').value = 'google';
         objOfPicker.picker.dispose()
     }
 }

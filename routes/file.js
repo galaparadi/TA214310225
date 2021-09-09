@@ -35,7 +35,9 @@ router.post('/upload', upload.single('document'), async (req, res, next) => {
 	form.append('file-id', req.body['drive-id']);
 	form.append('refresh-token', req.body['refresh-token']);
 	form.append('access-token', req.body['access-token']);
+	form.append('upload-method', req.body['upload-method']);
 	form.append('mime-type', req.body['mime-type']);
+
 	try {
 		let data = await WorkspaceDatasource.addDocument({ form, workspace: req.body.workspace, authorLevel: req.body['author-level'] });
 		if (data.status) {
